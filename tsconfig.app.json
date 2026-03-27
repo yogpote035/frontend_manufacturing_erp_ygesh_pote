@@ -1,9 +1,13 @@
 {
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-    "target": "ES2023",
+
+    "incremental": true,
+
+    "target": "ES2022", // 🔥 FIX (was ES2023)
     "useDefineForClassFields": true,
-    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+
     "module": "ESNext",
     "types": ["vite/client"],
     "skipLibCheck": true,
@@ -16,13 +20,14 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
-    "incremental": true,
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+
+    // ❌ keep these removed
     // "erasableSyntaxOnly": true,
-    "noFallthroughCasesInSwitch": true,
     // "noUncheckedSideEffectImports": true
   },
   "include": ["src"]
