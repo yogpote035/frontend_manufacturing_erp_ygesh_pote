@@ -11,7 +11,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
 
   const menuItems = [
     { name: "Dashboard", path: "/sales/home" },
-    { name: "Leads", path: "/sales/leads" },
+    { name: "Leads", path: "/sales/new-lead" },
     { name: "Reports", path: "/sales/reports" },
   ];
 

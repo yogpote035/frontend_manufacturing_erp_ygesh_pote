@@ -8,6 +8,7 @@ import { LoginPage } from "./pages/LoginPage";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import MainLayout from "./components/modules/sales/components/MainLayout/MainLayout";
 import NotFound from "./components/common/NotFound";
+import NewLead from "./pages/sales/NewLead";
 
 // const Layout = () => {
 //   return (
@@ -21,7 +22,7 @@ import NotFound from "./components/common/NotFound";
 function App() {
   const router = createBrowserRouter([
     {
-      path: "/login",
+      path: "/",
       element: <LoginPage />,
     },
     // Sales Module Routes
@@ -39,6 +40,10 @@ function App() {
             {
               path: "home",
               element: <SalesDashboard />,
+            },
+            {
+              path: "new-lead",
+              element: <NewLead />,
             },
           ],
         },
