@@ -43,9 +43,9 @@ const Sidebar = () => {
 
         {/* Lead */}
         <button
-          onClick={() => navigate("/sales/new-lead")}
+          onClick={() => navigate("/sales/leads")}
           className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
-            isActive("/sales/new-lead")
+            isActive("/sales/leads")
               ? "bg-black text-white shadow-lg"
               : "text-gray-700 hover:bg-gray-100"
           }`}
@@ -53,7 +53,7 @@ const Sidebar = () => {
           <img
             src="/icons/lead-management.svg"
             className={`h-5 w-5 ${
-              isActive("/sales/new-lead")
+              isActive("/sales/leads")
                 ? "brightness-0 invert"
                 : "brightness-0"
             }`}
