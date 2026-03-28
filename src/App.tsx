@@ -12,7 +12,7 @@ const LoginPage = lazy(() => import("./pages/LoginPage"));
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import MainLayout from "./components/modules/sales/components/MainLayout/MainLayout";
 import NotFound from "./components/common/NotFound";
-import SalesReport from "./components/modules/sales/components/SalesReport";
+import ReportsAndAnalytics from "./components/modules/sales/components/ReportsAndAnalytics";
 import SalesEmployees from "./components/modules/sales/components/SalesEmployees";
 import RoleNotMatched from "./components/common/RoleNotMatched";
 import LeadsPage from "./pages/sales/LeadsPage";
@@ -71,7 +71,7 @@ function App() {
 
             {
               path: "reports",
-              element: <SalesReport />,
+              element: <ReportsAndAnalytics />,
             },
 
             {
