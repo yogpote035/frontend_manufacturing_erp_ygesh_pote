@@ -17,6 +17,7 @@ import SalesEmployees from "./components/modules/sales/components/SalesEmployees
 import RoleNotMatched from "./components/common/RoleNotMatched";
 import LeadsPage from "./pages/sales/LeadsPage";
 import LeadForm from "./components/modules/sales/components/LeadForm";
+import LeadView from "./components/modules/sales/components/LeadView";
 
 /* Global Suspense Wrapper */
 const withSuspense = (Component: React.ReactNode) => (
@@ -76,6 +77,10 @@ function App() {
             {
               path: "employees",
               element: <SalesEmployees />,
+            },
+            {
+              path: "lead-view/:id",
+              element: <LeadView />,
             },
           ],
         },

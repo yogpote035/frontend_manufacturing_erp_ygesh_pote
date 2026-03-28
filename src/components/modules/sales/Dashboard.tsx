@@ -142,7 +142,7 @@ const PipelineChart: React.FC<PipelineChartProps> = ({ data }) => (
       <h3 className="text-lg font-bold text-slate-900">Sales Pipeline Performance</h3>
       <p className="text-sm text-slate-500">Stages analysis across all filters</p>
     </div>
-    <div className="h-[300px] w-full">
+    <div className="h-75 w-full">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data} margin={{ top: 20, right: 30, left: -20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
@@ -196,7 +196,7 @@ export const Dashboard = () => {
               <button
                 key={item}
                 onClick={() => setFilter(item)}
-                className={`min-w-[120px] px-6 py-2.5 text-sm font-semibold rounded-lg border transition-all duration-200 shadow-sm
+                className={`min-w-30 px-6 py-2.5 text-sm font-semibold rounded-lg border transition-all duration-200 shadow-sm
                   ${filter === item
                     ? "bg-slate-900 text-white border-slate-900 shadow-md"
                     : "bg-white text-slate-600 border-slate-300 hover:border-slate-400 hover:bg-slate-50"}`}
@@ -260,7 +260,7 @@ export const Dashboard = () => {
               </div>
             </div>
 
-            <div className="h-[400px]">
+            <div className="h-100">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={currentData.products} margin={{ top: 20, right: 30, left: 0, bottom: 5 }} barGap={8}>
                   <CartesianGrid vertical={false} stroke="#E2E8F0" />
