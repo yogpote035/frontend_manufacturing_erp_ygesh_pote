@@ -10,7 +10,7 @@ const Sidebar = () => {
   return (
     <div className="w-64 bg-white h-full lg:h-screen border-r border-gray-100 flex flex-col overflow-y-auto">
       {/* Logo - Updated to Pine Green Box */}
-      <div className="p-6 py-5 flex items-center gap-3">
+      <div className="p-6 py-[21.5px] flex items-center gap-3 border-b border-[#005d5230]">
         <Link to="/sales/dashboard" className="bg-[#005d52] p-2 rounded-xl text-white shadow-md">
           <img src="/icons/SalesDashboard.svg" className="h-5 w-5" alt="" />
         </Link>

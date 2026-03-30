@@ -9,7 +9,7 @@ const Navbar = ({ onMenuClick }: { onMenuClick: () => void }) => {
   };
 
   return (
-    <header className="h-16 sm:h-20 bg-[#f4f7f6] flex items-center justify-between px-4 sm:px-6 lg:px-10 border-b border-gray-100/50 sticky top-0 z-30">
+    <header className="h-16 sm:h-20 bg-[#f4f7f6] border-b border-[#005d5230] flex items-center justify-between px-4 sm:px-6 lg:px-10 sticky top-0 z-30">
       
       {/* LEFT: Menu & Search */}
       <div className="flex items-center gap-2 sm:gap-4 flex-1">
