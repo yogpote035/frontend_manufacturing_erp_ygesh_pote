@@ -258,8 +258,8 @@ const StatCard: FC<StatCardProps> = ({ label, value, trend, svg, isNeg }) => (
         <img
           src={svg}
           className="h-5 w-5 transition-all duration-300 
-             brightness-0 saturate-100 
-             invert-[23%] sepia-[21%] saturate-[1100%] hue-rotate-[120deg] brightness-[90%]
+              saturate-100 
+             invert-23 sepia-21 hue-rotate-120 brightness-90
              group-hover:invert group-hover:brightness-0"
           alt=""
         />            </div>
