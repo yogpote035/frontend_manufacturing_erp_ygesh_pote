@@ -13,13 +13,19 @@ import {
     X
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import {
+    formatDateForInput,
+    getTimeTabLabel,
+    isDateInRange,
+    isDateWithinCustomRange,
+    type DateRange,
+    type TimeTab,
+} from "../utils/dateFilters";
 
 // --- Types ---
 type Priority = "High" | "Medium" | "Low" | "All";
 type Stage = "Discovery" | "Proposal" | "Negotiation" | "Closed Won" | "Closed Lost" | "All";
 type Source = "Dealer" | "Website" | "Referral" | "Trade Show" | "Cold Call" | "All";
-type TimeTab = "Weekly" | "Monthly" | "Quarterly" | "Yearly" | "All Time";
-
 type Opportunity = {
     id: string;
     company: string;
@@ -111,6 +117,10 @@ const OpportunityList: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
     const [activeTab, setActiveTab] = useState<TimeTab>("Weekly");
+    const [customDateRange, setCustomDateRange] = useState<DateRange>({
+        from: "",
+        to: formatDateForInput(new Date()),
+    });
     
     // Filter States
     const [priorityFilter, setPriorityFilter] = useState<Priority>("All");
@@ -125,30 +135,6 @@ const OpportunityList: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 8;
 
-    // --- Date Filtering Helper ---
-    const isDateInRange = (dateStr: string, range: TimeTab) => {
-        const date = new Date(dateStr);
-        const now = new Date("2026-03-20"); 
-        
-        const diffInMs = now.getTime() - date.getTime();
-        const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
-
-        switch (range) {
-            case "Weekly":
-                return diffInDays <= 7 && diffInDays >= 0;
-            case "Monthly":
-                return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
-            case "Quarterly":
-                const currentQuarter = Math.floor(now.getMonth() / 3);
-                const leadQuarter = Math.floor(date.getMonth() / 3);
-                return currentQuarter === leadQuarter && date.getFullYear() === now.getFullYear();
-            case "Yearly":
-                return date.getFullYear() === now.getFullYear();
-            default:
-                return true;
-        }
-    };
-
     const filteredOpportunities = useMemo(() => {
         return opportunities.filter((opp) => {
             const matchesSearch = Object.values(opp).some((val) =>
@@ -158,10 +144,11 @@ const OpportunityList: React.FC = () => {
             const matchesStage = stageFilter === "All" || opp.stage === stageFilter;
             const matchesSource = sourceFilter === "All" || opp.source === sourceFilter;
             const matchesTime = isDateInRange(opp.createdAt, activeTab);
+            const matchesCustomRange = isDateWithinCustomRange(opp.createdAt, customDateRange);
 
-            return matchesSearch && matchesPriority && matchesStage && matchesSource && matchesTime;
+            return matchesSearch && matchesPriority && matchesStage && matchesSource && matchesTime && matchesCustomRange;
         });
-    }, [opportunities, searchQuery, priorityFilter, stageFilter, sourceFilter, activeTab]);
+    }, [opportunities, searchQuery, priorityFilter, stageFilter, sourceFilter, activeTab, customDateRange]);
 
     const priorityLabel = priorityFilter === "All" ? "Priorities" : priorityFilter;
     const stageLabel = stageFilter === "All" ? "Filter by Stage" : stageFilter;
@@ -220,8 +207,22 @@ const OpportunityList: React.FC = () => {
                             </button>
                         ))}
                     </div>
-                    <div className="flex items-center gap-2 bg-[#005d52] text-white px-4 py-2 rounded-full text-[11px] font-bold">
-                        <Calendar size={13} /> {activeTab} View: Mar 2026
+                    <div className="flex flex-wrap items-center gap-3">
+                        <div className="flex items-center gap-2 bg-[#005d52] text-white px-4 py-2 rounded-full text-[11px] font-bold">
+                            <Calendar size={13} /> {activeTab} View: {getTimeTabLabel(activeTab)}
+                        </div>
+                        <input
+                            type="date"
+                            value={customDateRange.from}
+                            onChange={(e) => { setCustomDateRange((prev) => ({ ...prev, from: e.target.value })); setCurrentPage(1); }}
+                            className="px-3 py-2 rounded-xl border border-gray-200 bg-white text-sm text-gray-700 outline-none focus:ring-2 focus:ring-[#005d52]/20"
+                        />
+                        <input
+                            type="date"
+                            value={customDateRange.to}
+                            onChange={(e) => { setCustomDateRange((prev) => ({ ...prev, to: e.target.value })); setCurrentPage(1); }}
+                            className="px-3 py-2 rounded-xl border border-gray-200 bg-white text-sm text-gray-700 outline-none focus:ring-2 focus:ring-[#005d52]/20"
+                        />
                     </div>
                 </div>
 
@@ -328,9 +329,16 @@ const OpportunityList: React.FC = () => {
                             </div>
 
                             {/* Clear All Filters */}
-                            {(priorityFilter !== "All" || stageFilter !== "All" || sourceFilter !== "All" || activeTab !== "All Time") && (
+                            {(priorityFilter !== "All" || stageFilter !== "All" || sourceFilter !== "All" || activeTab !== "All Time" || customDateRange.from !== "" || customDateRange.to !== formatDateForInput(new Date())) && (
                                 <button 
-                                    onClick={() => {setPriorityFilter("All"); setStageFilter("All"); setSourceFilter("All"); setActiveTab("All Time"); setCurrentPage(1)}}
+                                    onClick={() => {
+                                        setPriorityFilter("All");
+                                        setStageFilter("All");
+                                        setSourceFilter("All");
+                                        setActiveTab("All Time");
+                                        setCustomDateRange({ from: "", to: formatDateForInput(new Date()) });
+                                        setCurrentPage(1);
+                                    }}
                                     className="p-2.5 text-gray-400 hover:text-[#005d52] transition-colors"
                                     title="Clear Filters"
                                 >
