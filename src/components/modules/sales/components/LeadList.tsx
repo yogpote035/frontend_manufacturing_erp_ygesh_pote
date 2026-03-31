@@ -283,37 +283,37 @@ const LeadList: React.FC = () => {
                                     </th>
 
                                     {/* Lead ID - Small fixed width */}
-                                    <th className="w-20 p-3 text-[10px] font-bold text-gray-400 uppercase tracking-wider border-b border-r border-gray-100">
+                                    <th className="w-20 p-3 text-[10px] font-bold text-gray-800 uppercase tracking-wider border-b border-r border-gray-100">
                                         ID
                                     </th>
 
                                     {/* Date Created - Medium fixed width */}
-                                    <th className="w-28 p-3 text-[10px] font-bold text-gray-400 uppercase tracking-wider border-b border-r border-gray-100">
+                                    <th className="w-28 p-3 text-[10px] font-bold text-gray-800 uppercase tracking-wider border-b border-r border-gray-100">
                                         Created
                                     </th>
 
                                     {/* Company Name - Flexible width */}
-                                    <th className="p-3 text-[10px] font-bold text-gray-400 uppercase tracking-wider border-b border-r border-gray-100">
+                                    <th className="p-3 text-[10px] font-bold text-gray-800 uppercase tracking-wider border-b border-r border-gray-100">
                                         Company
                                     </th>
 
                                     {/* Product Name - Flexible width */}
-                                    <th className="p-3 text-[10px] font-bold text-gray-400 uppercase tracking-wider border-b border-r border-gray-100">
+                                    <th className="p-3 text-[10px] font-bold text-gray-800 uppercase tracking-wider border-b border-r border-gray-100">
                                         Product
                                     </th>
 
                                     {/* Quantity - Small fixed width */}
-                                    <th className="w-20 p-3 text-[10px] font-bold text-gray-400 uppercase tracking-wider border-b border-r border-gray-100 text-center">
+                                    <th className="w-20 p-3 text-[10px] font-bold text-gray-800 uppercase tracking-wider border-b border-r border-gray-100 text-center">
                                         Qty
                                     </th>
 
                                     {/* Status - Fixed width for badges */}
-                                    <th className="w-32 p-3 text-[10px] font-bold text-gray-400 uppercase tracking-wider border-b border-r border-gray-100 text-center">
+                                    <th className="w-32 p-3 text-[10px] font-bold text-gray-800 uppercase tracking-wider border-b border-r border-gray-100 text-center">
                                         Status
                                     </th>
 
                                     {/* Actions - Fixed width */}
-                                    <th className="w-28 p-3 text-[10px] font-bold text-gray-400 uppercase tracking-wider border-b border-gray-100 text-right">
+                                    <th className="w-28 p-3 text-[10px] font-bold text-gray-800 uppercase tracking-wider border-b border-gray-100 text-right">
                                         Actions
                                     </th>
                                 </tr>

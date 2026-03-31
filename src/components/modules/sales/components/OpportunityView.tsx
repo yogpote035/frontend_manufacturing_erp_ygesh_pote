@@ -131,7 +131,7 @@ const OpportunityView: React.FC = () => {
                                                 type="text" 
                                                 value={expectedValue} 
                                                 onChange={e => setExpectedValue(e.target.value)}
-                                                className="font-bold text-2xl text-[#005d52] bg-white border-b-2 border-[#005d52] outline-none w-full w-32" 
+                                                className="font-bold text-2xl text-[#005d52] bg-white border-b-2 border-[#005d52] outline-none w-32" 
                                             />
                                         ) : (
                                             <p className="font-bold text-2xl text-[#005d52]">{expectedValue}</p>

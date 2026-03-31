@@ -46,7 +46,7 @@ const DATA: Record<Exclude<FilterType, "Custom">, DataPoint> = {
     range: "17 - 23 March 2026",
     stats: { leads: 156, won: 42, revenue: "2.4M", rate: "18%" },
     pipeline: [
-      { name: "New", value: 45 }, { name: "Pending", value: 38 },
+      { name: "New", value: 45 }, { name: "Not Contacted", value: 38 },
       { name: "Contacted", value: 30 }, { name: "Negotiation", value: 22 },
       { name: "Quotation", value: 15 }, { name: "Won", value: 10 }, { name: "Lost", value: 5 },
     ],
@@ -56,7 +56,7 @@ const DATA: Record<Exclude<FilterType, "Custom">, DataPoint> = {
     range: "March 2026",
     stats: { leads: 640, won: 185, revenue: "10.2M", rate: "24%" },
     pipeline: [
-      { name: "New", value: 180 }, { name: "Pending", value: 150 },
+      { name: "New", value: 180 }, { name: "Not Contacted", value: 150 },
       { name: "Contacted", value: 120 }, { name: "Negotiation", value: 95 },
       { name: "Quotation", value: 70 }, { name: "Won", value: 50 }, { name: "Lost", value: 20 },
     ],
@@ -66,7 +66,7 @@ const DATA: Record<Exclude<FilterType, "Custom">, DataPoint> = {
     range: "Q1 2026",
     stats: { leads: "1.8K", won: 520, revenue: "34.5M", rate: "28%" },
     pipeline: [
-      { name: "New", value: 500 }, { name: "Pending", value: 420 },
+      { name: "New", value: 500 }, { name: "Not Contacted", value: 420 },
       { name: "Contacted", value: 350 }, { name: "Negotiation", value: 280 },
       { name: "Quotation", value: 200 }, { name: "Won", value: 160 }, { name: "Lost", value: 55 },
     ],
@@ -76,7 +76,7 @@ const DATA: Record<Exclude<FilterType, "Custom">, DataPoint> = {
     range: "FY 2023-24",
     stats: { leads: "7.2K", won: 2100, revenue: "142M", rate: "31%" },
     pipeline: [
-      { name: "New", value: 2000 }, { name: "Pending", value: 1700 },
+      { name: "New", value: 2000 }, { name: "Not Contacted", value: 1700 },
       { name: "Contacted", value: 1400 }, { name: "Negotiation", value: 1100 },
       { name: "Quotation", value: 800 }, { name: "Won", value: 650 }, { name: "Lost", value: 280 },
     ],
