@@ -38,10 +38,10 @@ const QuotationView: React.FC = () => {
         const element = document.getElementById('quotation-pdf-content');
         if (element) {
             const opt = {
-                margin:       0.5,
+                margin:       0.2,
                 filename:     `Quotation_${id || 'QT-001'}.pdf`,
                 image:        { type: 'jpeg' as const, quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true },
+                html2canvas:  { scale: 1 },
                 jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' as const }
             };
             html2pdf().set(opt).from(element).save();
@@ -93,9 +93,24 @@ const QuotationView: React.FC = () => {
                 </div>
 
                 {/* Main Card */}
-                <div id="quotation-pdf-content" className="bg-white rounded-4xl shadow-sm border border-gray-100 overflow-hidden">
+                <div id="quotation-pdf-content" className="bg-white rounded-4xl shadow-sm border border-gray-100">
                     
-                    <div className="p-8 lg:p-10 space-y-10">
+                    <div className="p-8 lg:p-12 space-y-10">
+
+                        {/* Official Document Header (Visible in PDF) */}
+                        <div className="flex justify-between items-start border-b border-gray-100 pb-8">
+                            <div>
+                                <h2 className="text-3xl font-black text-[#005d52] tracking-tighter">Manufacturing ERP</h2>
+                                <p className="text-gray-500 text-sm mt-1">100 Industry Way, Tech Park</p>
+                                <p className="text-gray-500 text-sm">Mumbai, Maharashtra, 400001</p>
+                                <p className="text-gray-500 text-sm mt-2">VAT: IN2938475892</p>
+                            </div>
+                            <div className="text-right">
+                                <h1 className="text-4xl font-black text-gray-200 uppercase tracking-widest mb-2">Quotation</h1>
+                                <p className="font-bold text-gray-800 text-lg">{id || 'QT-001'}</p>
+                                <p className="text-gray-500 text-sm font-medium">Date: 2026-03-25</p>
+                            </div>
+                        </div>
                         
                         {/* Summary & Customer Info Row */}
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

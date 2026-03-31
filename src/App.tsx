@@ -19,6 +19,9 @@ import LeadsPage from "./pages/sales/LeadsPage";
 import OpportunitiesPage from "./pages/sales/OpportunitiesPage";
 import QuotationPage from "./pages/sales/QuotationPage";
 import QuotationView from "./components/modules/sales/components/QuotationView";
+import OrdersPage from "./pages/sales/OrdersPage";
+import OrderView from "./components/modules/sales/components/OrderView";
+import SalesProductionPage from "./pages/sales/SalesProductionPage";
 import OpportunityView from "./components/modules/sales/components/OpportunityView";
 import LeadForm from "./components/modules/sales/components/LeadForm";
 import LeadView from "./components/modules/sales/components/LeadView";
@@ -79,6 +82,18 @@ function App() {
             {
               path: "quotation-view/:id",
               element: <QuotationView />,
+            },
+            {
+              path: "orders",
+              element: <OrdersPage />,
+            },
+            {
+              path: "order-view/:id",
+              element: <OrderView />,
+            },
+            {
+              path: "production",
+              element: <SalesProductionPage />,
             },
 
             {
