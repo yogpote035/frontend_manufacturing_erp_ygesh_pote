@@ -1,5 +1,13 @@
 import React, { useState, useMemo } from "react";
 import { Search, ChevronDown, Trash2, ChevronLeft, ChevronRight, ChevronsUpDown, Calendar, Edit3, X, Filter } from "lucide-react";
+import {
+    formatDateForInput,
+    getTimeTabLabel,
+    isDateInRange,
+    isDateWithinCustomRange,
+    type DateRange,
+    type TimeTab,
+} from "../utils/dateFilters";
 
 type ProdStatus = "In Progress" | "On Hold" | "Completed" | "Delayed" | "All";
 type Stage = "Raw Materials" | "Cutting" | "Assembly" | "Quality Check" | "Packaging";
@@ -26,6 +34,11 @@ const ProductionList: React.FC = () => {
     const [jobs, setJobs] = useState<ProductionJob[]>(INITIAL_JOBS);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
+    const [activeTab, setActiveTab] = useState<TimeTab>("Weekly");
+    const [customDateRange, setCustomDateRange] = useState<DateRange>({
+        from: "",
+        to: formatDateForInput(new Date()),
+    });
     
     const [statusFilter, setStatusFilter] = useState<ProdStatus>("All");
     const [isStatusOpen, setIsStatusOpen] = useState(false);
@@ -37,9 +50,11 @@ const ProductionList: React.FC = () => {
         return jobs.filter((j) => {
             const matchesSearch = Object.values(j).some((val) => String(val).toLowerCase().includes(searchQuery.toLowerCase()));
             const matchesStatus = statusFilter === "All" || j.status === statusFilter;
-            return matchesSearch && matchesStatus;
+            const matchesTime = isDateInRange(j.updatedAt, activeTab);
+            const matchesCustomRange = isDateWithinCustomRange(j.updatedAt, customDateRange);
+            return matchesSearch && matchesStatus && matchesTime && matchesCustomRange;
         });
-    }, [jobs, searchQuery, statusFilter]);
+    }, [jobs, searchQuery, statusFilter, activeTab, customDateRange]);
 
     const totalPages = Math.ceil(filteredJobs.length / itemsPerPage);
     const paginatedJobs = filteredJobs.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
@@ -91,7 +106,37 @@ const ProductionList: React.FC = () => {
                         <p className="text-sm text-gray-400 mt-1">Monitor live manufacturing stages</p>
                     </div>
                     <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full text-sm font-bold border border-gray-200 text-gray-600">
-                        <Calendar size={14} /> Today: {new Date().toLocaleDateString('en-GB')}
+                        <Calendar size={14} /> {getTimeTabLabel(activeTab)}
+                    </div>
+                </div>
+
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-8">
+                    <div className="flex flex-wrap gap-2 p-1.5 bg-white/60 rounded-2xl border border-white shadow-sm">
+                        {(["Weekly", "Monthly", "Quarterly", "Yearly", "All Time"] as TimeTab[]).map((tab) => (
+                            <button
+                                key={tab}
+                                onClick={() => { setActiveTab(tab); setCurrentPage(1); }}
+                                className={`px-6 py-2 text-xs font-bold rounded-xl transition-all ${
+                                    activeTab === tab ? "bg-[#005d52] text-white shadow-sm" : "text-gray-400 hover:text-gray-600"
+                                }`}
+                            >
+                                {tab}
+                            </button>
+                        ))}
+                    </div>
+                    <div className="flex flex-wrap items-center gap-3">
+                        <input
+                            type="date"
+                            value={customDateRange.from}
+                            onChange={(e) => { setCustomDateRange((prev) => ({ ...prev, from: e.target.value })); setCurrentPage(1); }}
+                            className="px-3 py-2 rounded-xl border border-gray-200 bg-white text-sm text-gray-700 outline-none focus:ring-2 focus:ring-[#005d52]/20"
+                        />
+                        <input
+                            type="date"
+                            value={customDateRange.to}
+                            onChange={(e) => { setCustomDateRange((prev) => ({ ...prev, to: e.target.value })); setCurrentPage(1); }}
+                            className="px-3 py-2 rounded-xl border border-gray-200 bg-white text-sm text-gray-700 outline-none focus:ring-2 focus:ring-[#005d52]/20"
+                        />
                     </div>
                 </div>
 
@@ -135,8 +180,13 @@ const ProductionList: React.FC = () => {
                                 )}
                             </div>
 
-                            {statusFilter !== "All" && (
-                                <button onClick={() => {setStatusFilter("All"); setCurrentPage(1)}} className="p-2.5 text-gray-400 hover:text-[#005d52] transition-colors">
+                            {(statusFilter !== "All" || activeTab !== "All Time" || customDateRange.from !== "" || customDateRange.to !== formatDateForInput(new Date())) && (
+                                <button onClick={() => {
+                                    setStatusFilter("All");
+                                    setActiveTab("All Time");
+                                    setCustomDateRange({ from: "", to: formatDateForInput(new Date()) });
+                                    setCurrentPage(1);
+                                }} className="p-2.5 text-gray-400 hover:text-[#005d52] transition-colors">
                                     <X size={20} />
                                 </button>
                             )}

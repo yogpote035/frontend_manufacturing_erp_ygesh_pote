@@ -13,11 +13,17 @@ import {
     Download
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import {
+    formatDateForInput,
+    getTimeTabLabel,
+    isDateInRange,
+    isDateWithinCustomRange,
+    type DateRange,
+    type TimeTab,
+} from "../utils/dateFilters";
 
 // --- Types ---
 type Status = "Draft" | "Sent" | "Accepted" | "Rejected" | "Expired" | "All";
-type TimeTab = "Weekly" | "Monthly" | "Quarterly" | "Yearly" | "All Time";
-
 type Quotation = {
     id: string;
     company: string;
@@ -46,6 +52,10 @@ const QuotationList: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
     const [activeTab, setActiveTab] = useState<TimeTab>("Weekly");
+    const [customDateRange, setCustomDateRange] = useState<DateRange>({
+        from: "",
+        to: formatDateForInput(new Date()),
+    });
     
     // Filter States
     const [statusFilter, setStatusFilter] = useState<Status>("All");
@@ -54,30 +64,6 @@ const QuotationList: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 8;
 
-    // --- Date Filtering Helper ---
-    const isDateInRange = (dateStr: string, range: TimeTab) => {
-        const date = new Date(dateStr);
-        const now = new Date("2026-03-20"); 
-        
-        const diffInMs = now.getTime() - date.getTime();
-        const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
-
-        switch (range) {
-            case "Weekly":
-                return diffInDays <= 7 && diffInDays >= 0;
-            case "Monthly":
-                return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
-            case "Quarterly":
-                const currentQuarter = Math.floor(now.getMonth() / 3);
-                const leadQuarter = Math.floor(date.getMonth() / 3);
-                return currentQuarter === leadQuarter && date.getFullYear() === now.getFullYear();
-            case "Yearly":
-                return date.getFullYear() === now.getFullYear();
-            default:
-                return true;
-        }
-    };
-
     const filteredQuotations = useMemo(() => {
         return quotations.filter((qt) => {
             const matchesSearch = Object.values(qt).some((val) =>
@@ -85,10 +71,11 @@ const QuotationList: React.FC = () => {
             );
             const matchesStatus = statusFilter === "All" || qt.status === statusFilter;
             const matchesTime = isDateInRange(qt.date, activeTab);
+            const matchesCustomRange = isDateWithinCustomRange(qt.date, customDateRange);
 
-            return matchesSearch && matchesStatus && matchesTime;
+            return matchesSearch && matchesStatus && matchesTime && matchesCustomRange;
         });
-    }, [quotations, searchQuery, statusFilter, activeTab]);
+    }, [quotations, searchQuery, statusFilter, activeTab, customDateRange]);
 
     const statusLabel = statusFilter === "All" ? "Filter by Status" : statusFilter;
 
@@ -156,8 +143,22 @@ const QuotationList: React.FC = () => {
                             </button>
                         ))}
                     </div>
-                    <div className="flex items-center gap-2 bg-[#005d52] text-white px-4 py-2 rounded-full text-[11px] font-bold">
-                        <Calendar size={13} /> {activeTab} View: Mar 2026
+                    <div className="flex flex-wrap items-center gap-3">
+                        <div className="flex items-center gap-2 bg-[#005d52] text-white px-4 py-2 rounded-full text-[11px] font-bold">
+                            <Calendar size={13} /> {activeTab} View: {getTimeTabLabel(activeTab)}
+                        </div>
+                        <input
+                            type="date"
+                            value={customDateRange.from}
+                            onChange={(e) => { setCustomDateRange((prev) => ({ ...prev, from: e.target.value })); setCurrentPage(1); }}
+                            className="px-3 py-2 rounded-xl border border-gray-200 bg-white text-sm text-gray-700 outline-none focus:ring-2 focus:ring-[#005d52]/20"
+                        />
+                        <input
+                            type="date"
+                            value={customDateRange.to}
+                            onChange={(e) => { setCustomDateRange((prev) => ({ ...prev, to: e.target.value })); setCurrentPage(1); }}
+                            className="px-3 py-2 rounded-xl border border-gray-200 bg-white text-sm text-gray-700 outline-none focus:ring-2 focus:ring-[#005d52]/20"
+                        />
                     </div>
                 </div>
 
@@ -208,9 +209,14 @@ const QuotationList: React.FC = () => {
                             </div>
 
                             {/* Clear All Filters */}
-                            {(statusFilter !== "All" || activeTab !== "All Time") && (
+                            {(statusFilter !== "All" || activeTab !== "All Time" || customDateRange.from !== "" || customDateRange.to !== formatDateForInput(new Date())) && (
                                 <button 
-                                    onClick={() => {setStatusFilter("All"); setActiveTab("All Time"); setCurrentPage(1)}}
+                                    onClick={() => {
+                                        setStatusFilter("All");
+                                        setActiveTab("All Time");
+                                        setCustomDateRange({ from: "", to: formatDateForInput(new Date()) });
+                                        setCurrentPage(1);
+                                    }}
                                     className="p-2.5 text-gray-400 hover:text-[#005d52] transition-colors"
                                     title="Clear Filters"
                                 >

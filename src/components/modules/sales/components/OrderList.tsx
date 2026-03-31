@@ -3,9 +3,16 @@ import {
     Plus, ChevronDown, Search, Trash2, ChevronLeft, ChevronRight, ChevronsUpDown, Calendar, Eye, Download, X
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import {
+    formatDateForInput,
+    getTimeTabLabel,
+    isDateInRange,
+    isDateWithinCustomRange,
+    type DateRange,
+    type TimeTab,
+} from "../utils/dateFilters";
 
 type Status = "Pending" | "Processing" | "Delivered" | "Cancelled" | "All";
-type TimeTab = "Weekly" | "Monthly" | "Quarterly" | "Yearly" | "All Time";
 
 type Order = {
     id: string;
@@ -32,6 +39,10 @@ const OrderList: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
     const [activeTab, setActiveTab] = useState<TimeTab>("Monthly");
+    const [customDateRange, setCustomDateRange] = useState<DateRange>({
+        from: "",
+        to: formatDateForInput(new Date()),
+    });
     
     const [statusFilter, setStatusFilter] = useState<Status>("All");
     const [isStatusOpen, setIsStatusOpen] = useState(false);
@@ -39,29 +50,15 @@ const OrderList: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 8;
 
-    const isDateInRange = (dateStr: string, range: TimeTab) => {
-        const date = new Date(dateStr);
-        const now = new Date("2026-03-20"); 
-        const diffInMs = now.getTime() - date.getTime();
-        const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
-
-        switch (range) {
-            case "Weekly": return diffInDays <= 7 && diffInDays >= 0;
-            case "Monthly": return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
-            case "Quarterly": return Math.floor(now.getMonth() / 3) === Math.floor(date.getMonth() / 3) && date.getFullYear() === now.getFullYear();
-            case "Yearly": return date.getFullYear() === now.getFullYear();
-            default: return true;
-        }
-    };
-
     const filteredOrders = useMemo(() => {
         return orders.filter((o) => {
             const matchesSearch = Object.values(o).some((val) => String(val).toLowerCase().includes(searchQuery.toLowerCase()));
             const matchesStatus = statusFilter === "All" || o.status === statusFilter;
             const matchesTime = isDateInRange(o.date, activeTab);
-            return matchesSearch && matchesStatus && matchesTime;
+            const matchesCustomRange = isDateWithinCustomRange(o.date, customDateRange);
+            return matchesSearch && matchesStatus && matchesTime && matchesCustomRange;
         });
-    }, [orders, searchQuery, statusFilter, activeTab]);
+    }, [orders, searchQuery, statusFilter, activeTab, customDateRange]);
 
     const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
     const paginatedOrders = filteredOrders.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
@@ -120,8 +117,22 @@ const OrderList: React.FC = () => {
                             </button>
                         ))}
                     </div>
-                    <div className="flex items-center gap-2 bg-[#005d52] text-white px-4 py-2 rounded-full text-[11px] font-bold">
-                        <Calendar size={13} /> {activeTab} View: Mar 2026
+                    <div className="flex flex-wrap items-center gap-3">
+                        <div className="flex items-center gap-2 bg-[#005d52] text-white px-4 py-2 rounded-full text-[11px] font-bold">
+                            <Calendar size={13} /> {activeTab} View: {getTimeTabLabel(activeTab)}
+                        </div>
+                        <input
+                            type="date"
+                            value={customDateRange.from}
+                            onChange={(e) => { setCustomDateRange((prev) => ({ ...prev, from: e.target.value })); setCurrentPage(1); }}
+                            className="px-3 py-2 rounded-xl border border-gray-200 bg-white text-sm text-gray-700 outline-none focus:ring-2 focus:ring-[#005d52]/20"
+                        />
+                        <input
+                            type="date"
+                            value={customDateRange.to}
+                            onChange={(e) => { setCustomDateRange((prev) => ({ ...prev, to: e.target.value })); setCurrentPage(1); }}
+                            className="px-3 py-2 rounded-xl border border-gray-200 bg-white text-sm text-gray-700 outline-none focus:ring-2 focus:ring-[#005d52]/20"
+                        />
                     </div>
                 </div>
 
@@ -164,8 +175,13 @@ const OrderList: React.FC = () => {
                                 )}
                             </div>
 
-                            {(statusFilter !== "All" || activeTab !== "All Time") && (
-                                <button onClick={() => {setStatusFilter("All"); setActiveTab("All Time"); setCurrentPage(1)}} className="p-2.5 text-gray-400 hover:text-[#005d52] transition-colors">
+                            {(statusFilter !== "All" || activeTab !== "All Time" || customDateRange.from !== "" || customDateRange.to !== formatDateForInput(new Date())) && (
+                                <button onClick={() => {
+                                    setStatusFilter("All");
+                                    setActiveTab("All Time");
+                                    setCustomDateRange({ from: "", to: formatDateForInput(new Date()) });
+                                    setCurrentPage(1);
+                                }} className="p-2.5 text-gray-400 hover:text-[#005d52] transition-colors">
                                     <X size={20} />
                                 </button>
                             )}
