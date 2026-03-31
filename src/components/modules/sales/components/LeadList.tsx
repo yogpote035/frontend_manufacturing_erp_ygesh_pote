@@ -1,4 +1,4 @@
-﻿import React, { useState, useMemo } from "react";
+﻿import React, { useState, useMemo, useRef, useEffect } from "react";
 import {
     Plus,
     ChevronDown,
@@ -9,7 +9,8 @@ import {
     Eye,
     FileEdit,
     X,
-    Filter
+    Filter,
+    Calendar as CalendarIcon
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -37,7 +38,7 @@ interface Lead {
     priority: Exclude<Priority, "All">;
     assignedTo: string;
     followUp: string;
-    createdAt: string; // ISO Format: YYYY-MM-DD
+    createdAt: string;
 }
 
 const INITIAL_LEADS: Lead[] = [
@@ -64,41 +65,51 @@ const LeadList: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 8;
 
-    // Filters State
+    // Filter States
     const [customRange, setCustomRange] = useState({ start: "", end: "" });
     const [priorityFilter, setPriorityFilter] = useState<Priority>("All");
     const [statusFilter, setStatusFilter] = useState<Status>("All");
     const [sourceFilter, setSourceFilter] = useState<Source>("All");
 
-    // Dropdown UI state
+    // UI Open States
     const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+    const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+    const calendarRef = useRef<HTMLDivElement>(null);
 
-    const toggleDropdown = (name: string) => {
-        setOpenDropdown(openDropdown === name ? null : name);
-    };
+    // Close calendar on outside click
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (calendarRef.current && !calendarRef.current.contains(event.target as Node)) {
+                setIsCalendarOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
 
     // --- Filtering Logic ---
     const filteredLeads = useMemo(() => {
         return leads.filter((lead) => {
-            // 1. Search filter
             const matchesSearch = lead.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 lead.id.toLowerCase().includes(searchQuery.toLowerCase());
-
-            // 2. Main Filters
             const matchesPriority = priorityFilter === "All" || lead.priority === priorityFilter;
             const matchesStatus = statusFilter === "All" || lead.status === statusFilter;
             const matchesSource = sourceFilter === "All" || lead.source === sourceFilter;
 
-            // 3. Time/Date Filter
             let matchesTime = true;
             const leadDate = new Date(lead.createdAt);
-            const now = new Date("2026-03-20"); // Reference mock date
+            const now = new Date("2026-03-20");
 
             if (activeTab === "Custom") {
                 const start = customRange.start ? new Date(customRange.start) : null;
                 const end = customRange.end ? new Date(customRange.end) : null;
                 if (start) matchesTime = matchesTime && leadDate >= start;
-                if (end) matchesTime = matchesTime && leadDate <= end;
+                if (end) {
+                    // Set end to end of day
+                    const endOfRange = new Date(end);
+                    endOfRange.setHours(23, 59, 59);
+                    matchesTime = matchesTime && leadDate <= endOfRange;
+                }
             } else if (activeTab !== "All Time") {
                 const diffInDays = (now.getTime() - leadDate.getTime()) / (1000 * 60 * 60 * 24);
                 if (activeTab === "Weekly") matchesTime = diffInDays <= 7 && diffInDays >= 0;
@@ -106,12 +117,10 @@ const LeadList: React.FC = () => {
                 if (activeTab === "Quarterly") matchesTime = Math.floor(leadDate.getMonth() / 3) === Math.floor(now.getMonth() / 3) && leadDate.getFullYear() === now.getFullYear();
                 if (activeTab === "Yearly") matchesTime = leadDate.getFullYear() === now.getFullYear();
             }
-
             return matchesSearch && matchesPriority && matchesStatus && matchesSource && matchesTime;
         });
     }, [leads, searchQuery, priorityFilter, statusFilter, sourceFilter, activeTab, customRange]);
 
-    // --- Pagination Logic ---
     const totalPages = Math.ceil(filteredLeads.length / itemsPerPage);
     const paginatedLeads = filteredLeads.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
@@ -120,7 +129,7 @@ const LeadList: React.FC = () => {
     };
 
     const getStatusStyle = (status: string) => {
-        const base = "px-3 py-1 rounded-full text-[10px] font-medium border "; // Note: font-medium here for status pill only
+        const base = "px-3 py-1 rounded-full text-[10px] font-medium border ";
         switch (status) {
             case 'Won': return base + 'bg-green-50 text-green-700 border-green-200';
             case 'Lost': return base + 'bg-red-50 text-red-700 border-red-200';
@@ -130,10 +139,10 @@ const LeadList: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#f4f7f6] p-4 md:p-8 text-gray-900 transition-all">
+        <div className="min-h-screen bg-[#f4f7f6] p-4 md:p-8 text-gray-900 font-sans">
             <div className="max-w-7xl mx-auto">
 
-                {/* Header Section */}
+                {/* Header */}
                 <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
                     <div>
                         <h1 className="text-2xl font-bold text-gray-800 tracking-tight">Leads</h1>
@@ -141,47 +150,65 @@ const LeadList: React.FC = () => {
                     </div>
                     <button
                         onClick={() => navigate("/sales/new-lead")}
-                        className="w-full md:w-auto flex items-center justify-center gap-2 bg-[#005d52] text-white px-6 py-3 rounded-full font-bold text-sm shadow-lg shadow-teal-900/20 hover:scale-105 transition-transform active:scale-95"
+                        className="w-full md:w-auto flex items-center justify-center gap-2 bg-[#005d52] text-white px-6 py-3 rounded-full font-bold text-sm shadow-lg shadow-teal-900/20 hover:scale-105 transition-transform"
                     >
                         <Plus size={18} strokeWidth={3} /> New Lead
                     </button>
                 </header>
 
-                {/* Time Tabs & Custom Range UI */}
-                <section className="flex flex-col gap-4 mb-8">
+                {/* Tabs */}
+                <section className="relative mb-8 flex flex-wrap items-center gap-3">
                     <div className="flex flex-wrap items-center gap-2 p-1.5 bg-white/80 backdrop-blur-md rounded-2xl border border-white shadow-sm w-fit">
-                        {(["Weekly", "Monthly", "Quarterly", "Yearly", "All Time", "Custom"] as TimeTab[]).map((tab) => (
+                        {(["Weekly", "Monthly", "Quarterly", "Yearly", "All Time"] as TimeTab[]).map((tab) => (
                             <button
                                 key={tab}
-                                onClick={() => { setActiveTab(tab); setCurrentPage(1); }}
+                                onClick={() => { setActiveTab(tab); setCurrentPage(1); setIsCalendarOpen(false); }}
                                 className={`px-5 py-2 text-xs font-bold rounded-xl transition-all ${activeTab === tab ? "bg-[#d1e9e7] text-[#005d52] shadow-sm" : "text-gray-400 hover:text-gray-600"}`}
                             >
                                 {tab}
                             </button>
                         ))}
+                        <button
+                            onClick={() => setIsCalendarOpen(!isCalendarOpen)}
+                            className={`px-5 py-2 text-xs font-bold rounded-xl transition-all flex items-center gap-2 ${activeTab === "Custom" ? "bg-[#d1e9e7] text-[#005d52] shadow-sm" : "text-gray-400 hover:text-gray-600"}`}
+                        >
+                            <CalendarIcon size={14} /> Custom Range
+                        </button>
                     </div>
 
-                    {activeTab === "Custom" && (
-                        <div className="flex flex-col sm:flex-row items-center gap-4 p-4 bg-white rounded-2xl border border-teal-100 shadow-sm animate-in slide-in-from-top-2 duration-300">
-                            <div className="flex items-center gap-3 w-full sm:w-auto">
-                                <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">From</span>
-                                <input
-                                    type="date"
-                                    className="flex-1 sm:w-40 bg-gray-50 border-none rounded-lg p-2 text-sm text-[#005d52] outline-none focus:ring-2 focus:ring-teal-500/20"
-                                    onChange={(e) => setCustomRange({ ...customRange, start: e.target.value })}
-                                />
+                    {/* Calendar Popup */}
+                    {isCalendarOpen && (
+                        <div ref={calendarRef} className="absolute top-full mt-2 left-90 z-50 bg-white p-6 rounded-3xl shadow-2xl border border-gray-100 min-w-[320px] animate-in zoom-in-95 duration-200">
+                            <div className="flex justify-between items-center mb-4">
+                                <h4 className="text-sm font-bold text-gray-800">Select Date Range</h4>
+                                <button onClick={() => setIsCalendarOpen(false)}><X size={18} className="text-gray-400" /></button>
                             </div>
-                            <div className="flex items-center gap-3 w-full sm:w-auto">
-                                <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">To</span>
-                                <input
-                                    type="date"
-                                    className="flex-1 sm:w-40 bg-gray-50 border-none rounded-lg p-2 text-sm text-[#005d52] outline-none focus:ring-2 focus:ring-teal-500/20"
-                                    onChange={(e) => setCustomRange({ ...customRange, end: e.target.value })}
-                                />
+                            <div className="grid gap-4">
+                                <div className="grid gap-1">
+                                    <label className="text-[10px] font-bold text-gray-400 uppercase">Start Date</label>
+                                    <input
+                                        type="date"
+                                        value={customRange.start}
+                                        onChange={(e) => setCustomRange({ ...customRange, start: e.target.value })}
+                                        className="w-full p-3 bg-gray-50 border-none rounded-xl text-sm outline-none focus:ring-2 focus:ring-teal-500/20"
+                                    />
+                                </div>
+                                <div className="grid gap-1">
+                                    <label className="text-[10px] font-bold text-gray-400 uppercase">End Date</label>
+                                    <input
+                                        type="date"
+                                        value={customRange.end}
+                                        onChange={(e) => setCustomRange({ ...customRange, end: e.target.value })}
+                                        className="w-full p-3 bg-gray-50 border-none rounded-xl text-sm outline-none focus:ring-2 focus:ring-teal-500/20"
+                                    />
+                                </div>
+                                <button
+                                    onClick={() => { setActiveTab("Custom"); setIsCalendarOpen(false); setCurrentPage(1); }}
+                                    className="w-full py-3 bg-[#005d52] text-white rounded-xl font-bold text-xs shadow-lg shadow-teal-900/20"
+                                >
+                                    Apply Range
+                                </button>
                             </div>
-                            <button onClick={() => { setCustomRange({ start: "", end: "" }); setActiveTab("All Time") }} className="ml-auto text-gray-400 hover:text-red-500 p-2">
-                                <X size={18} />
-                            </button>
                         </div>
                     )}
                 </section>
@@ -190,13 +217,13 @@ const LeadList: React.FC = () => {
                 <div className="bg-white rounded-4xl shadow-xl shadow-gray-200/50 border border-gray-100 overflow-hidden">
 
                     {/* Toolbar */}
-                    <div className="p-6 flex flex-col xl:flex-row justify-between items-center gap-4 bg-white">
+                    <div className="p-6 flex flex-col xl:flex-row justify-between items-center gap-4 bg-white border-b border-gray-50">
                         <div className="relative w-full xl:w-96 group">
                             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-[#005d52] transition-colors" size={18} />
                             <input
                                 type="text"
                                 placeholder="Search by Lead ID or Company..."
-                                className="w-full pl-12 pr-4 py-3 bg-[#f8faf9] border-transparent rounded-2xl focus:bg-white focus:ring-2 focus:ring-[#005d52]/10 text-sm outline-none transition-all"
+                                className="w-full pl-12 pr-4 py-3 bg-[#f8faf9] border-transparent rounded-2xl focus:bg-white focus:ring-2 focus:ring-[#005d52]/10 text-sm outline-none transition-all font-normal"
                                 value={searchQuery}
                                 onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
                             />
@@ -210,7 +237,7 @@ const LeadList: React.FC = () => {
                             ].map((f) => (
                                 <div key={f.label} className="relative">
                                     <button
-                                        onClick={() => toggleDropdown(f.label)}
+                                        onClick={() => setOpenDropdown(openDropdown === f.label ? null : f.label)}
                                         className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-xs font-bold transition-all ${f.value !== "All" ? "bg-teal-50 border-[#005d52] text-[#005d52]" : "bg-white border-gray-100 text-gray-500 hover:border-gray-300"}`}
                                     >
                                         {f.value === "All" ? f.label : f.value} <ChevronDown size={14} className={openDropdown === f.label ? "rotate-180 transition-transform" : "transition-transform"} />
@@ -230,7 +257,6 @@ const LeadList: React.FC = () => {
                                     )}
                                 </div>
                             ))}
-
                             <button
                                 onClick={() => { setLeads(prev => prev.filter(l => !selectedIds.includes(l.id))); setSelectedIds([]) }}
                                 disabled={selectedIds.length === 0}
@@ -242,62 +268,125 @@ const LeadList: React.FC = () => {
                     </div>
 
                     {/* Table Area */}
-                    <div className="w-full overflow-x-auto">
-                        <table className="w-full text-left border-collapse min-w-200">
+                    <div className="w-full overflow-hidden border-t border-gray-100">
+                        <table className="w-full text-left border-separate border-spacing-0 table-fixed">
                             <thead>
-                                <tr className="bg-gray-50/50 border-b border-gray-100">
-                                    <th className="p-6 w-12 text-center">
+                                <tr className="bg-gray-50/50">
+                                    {/* Selection Column - Narrowest */}
+                                    <th className="w-12 p-3 text-center border-b border-r border-gray-100">
                                         <input
                                             type="checkbox"
-                                            className="accent-[#005d52] w-4 h-4"
+                                            className="accent-[#005d52] w-4 h-4 cursor-pointer"
                                             checked={selectedIds.length === paginatedLeads.length && paginatedLeads.length > 0}
                                             onChange={toggleSelectAll}
                                         />
                                     </th>
-                                    {["Lead ID", "Date Created", "Company Name", "Product Name", "Quantity", "Status", "Actions"].map(h => (
-                                        <th key={h} className="p-6 text-[10px] font-bold text-gray-400 uppercase tracking-[0.15em]">{h}</th>
-                                    ))}
+
+                                    {/* Lead ID - Small fixed width */}
+                                    <th className="w-20 p-3 text-[10px] font-bold text-gray-400 uppercase tracking-wider border-b border-r border-gray-100">
+                                        ID
+                                    </th>
+
+                                    {/* Date Created - Medium fixed width */}
+                                    <th className="w-28 p-3 text-[10px] font-bold text-gray-400 uppercase tracking-wider border-b border-r border-gray-100">
+                                        Created
+                                    </th>
+
+                                    {/* Company Name - Flexible width */}
+                                    <th className="p-3 text-[10px] font-bold text-gray-400 uppercase tracking-wider border-b border-r border-gray-100">
+                                        Company
+                                    </th>
+
+                                    {/* Product Name - Flexible width */}
+                                    <th className="p-3 text-[10px] font-bold text-gray-400 uppercase tracking-wider border-b border-r border-gray-100">
+                                        Product
+                                    </th>
+
+                                    {/* Quantity - Small fixed width */}
+                                    <th className="w-20 p-3 text-[10px] font-bold text-gray-400 uppercase tracking-wider border-b border-r border-gray-100 text-center">
+                                        Qty
+                                    </th>
+
+                                    {/* Status - Fixed width for badges */}
+                                    <th className="w-32 p-3 text-[10px] font-bold text-gray-400 uppercase tracking-wider border-b border-r border-gray-100 text-center">
+                                        Status
+                                    </th>
+
+                                    {/* Actions - Fixed width */}
+                                    <th className="w-28 p-3 text-[10px] font-bold text-gray-400 uppercase tracking-wider border-b border-gray-100 text-right">
+                                        Actions
+                                    </th>
                                 </tr>
                             </thead>
+
                             <tbody className="divide-y divide-gray-50">
                                 {paginatedLeads.map((lead) => (
-                                    <tr key={lead.id} className="hover:bg-[#f8faf9]/50 transition-colors group font-normal text-gray-600">
-                                        <td className="p-6 text-center">
+                                    <tr key={lead.id} className="hover:bg-[#f8faf9]/80 transition-colors group">
+                                        <td className="p-3 text-center border-r border-gray-100">
                                             <input
                                                 type="checkbox"
-                                                className="accent-[#005d52] w-4 h-4"
+                                                className="accent-[#005d52] w-4 h-4 cursor-pointer"
                                                 checked={selectedIds.includes(lead.id)}
                                                 onChange={() => setSelectedIds(prev => prev.includes(lead.id) ? prev.filter(i => i !== lead.id) : [...prev, lead.id])}
                                             />
                                         </td>
-                                        <td className="p-6 text-sm font-bold text-[#005d52]">{lead.id}</td>
-                                        <td className="p-6 text-sm">{lead.createdAt}</td>
-                                        <td className="p-6 text-sm text-gray-800">{lead.company}</td>
-                                        <td className="p-6 text-sm">{lead.product}</td>
-                                        <td className="p-6 text-sm">
-                                            <span className="text-gray-900">{lead.quantity}</span> <span className="text-[10px] text-gray-400 uppercase">{lead.unit}</span>
+
+                                        <td className="p-3 text-xs font-bold text-[#005d52] border-r border-gray-100">
+                                            {lead.id}
                                         </td>
-                                        <td className="p-6">
+
+                                        <td className="p-3 text-xs text-gray-500 border-r border-gray-100 whitespace-nowrap">
+                                            {lead.createdAt}
+                                        </td>
+
+                                        <td className="p-3 text-xs text-gray-800 border-r border-gray-100 truncate max-w-0" title={lead.company}>
+                                            {lead.company}
+                                        </td>
+
+                                        <td className="p-3 text-xs text-gray-600 border-r border-gray-100 truncate max-w-0" title={lead.product}>
+                                            {lead.product}
+                                        </td>
+
+                                        <td className="p-3 text-xs border-r border-gray-100 text-center">
+                                            <span className="text-gray-900">{lead.quantity}</span>
+                                            <span className="text-[10px] text-gray-400 ml-1 uppercase">{lead.unit}</span>
+                                        </td>
+
+                                        <td className="p-3 text-center border-r border-gray-100">
                                             <span className={getStatusStyle(lead.status)}>
                                                 {lead.status}
                                             </span>
                                         </td>
-                                        <td className="p-6">
-                                            <div className="flex gap-1 justify-end">
-                                                <button title="View" className="p-2 hover:bg-teal-50 text-gray-400 hover:text-[#005d52] rounded-lg transition-all"><Eye size={16} /></button>
-                                                <button title="Edit" className="p-2 hover:bg-blue-50 text-gray-400 hover:text-blue-600 rounded-lg transition-all"><FileEdit size={16} /></button>
-                                                <button title="Delete" onClick={() => setLeads(prev => prev.filter(l => l.id !== lead.id))} className="p-2 hover:bg-red-50 text-gray-400 hover:text-red-500 rounded-lg transition-all"><Trash2 size={16} /></button>
+
+                                        <td className="p-3">
+                                            <div className="flex gap-0.5 justify-end">
+                                                <button title="View" className="p-1.5 hover:bg-teal-50 text-gray-400 hover:text-[#005d52] rounded-md transition-all">
+                                                    <Eye size={15} />
+                                                </button>
+                                                <button title="Edit" className="p-1.5 hover:bg-blue-50 text-gray-400 hover:text-blue-600 rounded-md transition-all">
+                                                    <FileEdit size={15} />
+                                                </button>
+                                                <button
+                                                    title="Delete"
+                                                    onClick={() => setLeads(prev => prev.filter(l => l.id !== lead.id))}
+                                                    className="p-1.5 hover:bg-red-50 text-gray-400 hover:text-red-500 rounded-md transition-all"
+                                                >
+                                                    <Trash2 size={15} />
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
+
                         {paginatedLeads.length === 0 && (
-                            <div className="py-24 text-center">
-                                <div className="inline-flex p-6 bg-gray-50 rounded-full mb-4"><Filter className="text-gray-300" size={32} /></div>
-                                <h3 className="text-gray-800 font-bold">No leads found</h3>
-                                <p className="text-gray-400 text-sm font-normal">Try adjusting your filters or date range</p>
+                            <div className="py-20 text-center border-b border-gray-100">
+                                <div className="inline-flex p-5 bg-gray-50 rounded-full mb-3">
+                                    <Filter className="text-gray-300" size={24} />
+                                </div>
+                                <h3 className="text-sm font-bold text-gray-800">No leads found</h3>
+                                <p className="text-xs text-gray-400 font-normal mt-1">Try adjusting your filters</p>
                             </div>
                         )}
                     </div>
@@ -305,7 +394,7 @@ const LeadList: React.FC = () => {
                     {/* Footer / Pagination */}
                     <footer className="p-6 bg-gray-50/30 border-t border-gray-50 flex flex-col md:flex-row justify-between items-center gap-6">
                         <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                            Showing <span className="text-gray-900">{paginatedLeads.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0} - {Math.min(currentPage * itemsPerPage, filteredLeads.length)}</span> of <span className="text-gray-900">{filteredLeads.length}</span> Results
+                            Showing <span className="text-gray-900 font-bold">{paginatedLeads.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0} - {Math.min(currentPage * itemsPerPage, filteredLeads.length)}</span> of <span className="text-gray-900 font-bold">{filteredLeads.length}</span> Results
                         </div>
 
                         <div className="flex items-center gap-4">
