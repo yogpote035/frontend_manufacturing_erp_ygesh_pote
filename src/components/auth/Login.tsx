@@ -60,6 +60,8 @@ const Login: React.FC = () => {
       const user = USERS.find((u) => u.email === email && u.password === password);
       if (user) {
         localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("token", "mock-jwt-token");
+        localStorage.setItem("userRole", user.role);
         navigate("/sales/dashboard");
       } else {
         setAuthError("Unauthorized: Invalid credentials");
