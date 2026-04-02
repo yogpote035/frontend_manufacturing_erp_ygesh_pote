@@ -179,10 +179,10 @@ const OpportunityList: React.FC = () => {
                     {/* Toolbar */}
                     <div className="p-6 flex flex-col xl:flex-row justify-between items-center gap-4 bg-white border-b border-gray-50">
                         <div className="relative w-full xl:w-96 group">
-                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-[#005d52] transition-colors" size={18} />
+                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-[#005d52] transition-colors placeholder:text-2xl" size={18}  />
                             <input
                                 type="text"
-                                placeholder="Search by Opportunity ID or Company..."
+                                placeholder="Search by ID or Company"
                                 value={searchQuery}
                                 onChange={(e) => {setSearchQuery(e.target.value); setCurrentPage(1);}}
                                 className="w-full pl-12 pr-4 py-3 bg-[#f8faf9] border-transparent rounded-2xl focus:bg-white focus:ring-2 focus:ring-[#005d52]/10 text-sm outline-none transition-all"
