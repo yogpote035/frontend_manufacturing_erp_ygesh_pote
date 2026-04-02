@@ -8,7 +8,7 @@ import {
     isDateInRange,
     isDateWithinCustomRange,
     type DateRange,
-    type TimeTab as BaseDateTab,
+    type TimeTab,
 } from "../utils/dateFilters";
 
 type TimeTabWithCustom = TimeTab | "Custom";
