@@ -15,12 +15,13 @@ import {
 import { useNavigate } from "react-router-dom";
 import {
     formatDateForInput,
-    getTimeTabLabel,
     isDateInRange,
     isDateWithinCustomRange,
     type DateRange,
     type TimeTab,
 } from "../utils/dateFilters";
+
+type TimeTabWithCustom = TimeTab | "Custom";
 
 // --- Types ---
 type Status = "Draft" | "Sent" | "Accepted" | "Rejected" | "Expired" | "All";
@@ -52,7 +53,7 @@ const QuotationList: React.FC = () => {
     const [quotations, setQuotations] = useState<Quotation[]>(INITIAL_QUOTATIONS);
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
-    const [activeTab, setActiveTab] = useState<TimeTab>("All Time");
+    const [activeTab, setActiveTab] = useState<TimeTabWithCustom>("All Time");
     const [isCalendarOpen, setIsCalendarOpen] = useState(false);
     const [customDateRange, setCustomDateRange] = useState<DateRange>({
         from: "",

@@ -5,12 +5,13 @@ import {
 import { useNavigate } from "react-router-dom";
 import {
     formatDateForInput,
-    getTimeTabLabel,
     isDateInRange,
     isDateWithinCustomRange,
     type DateRange,
-    type TimeTab,
+    type TimeTab as BaseDateTab,
 } from "../utils/dateFilters";
+
+type TimeTab = BaseDateTab | "Custom";
 
 type Status = "Pending" | "Processing" | "Delivered" | "Cancelled" | "All";
 
