@@ -35,16 +35,6 @@ import ViewSalesEmployee from "./components/modules/sales/components/ViewSalesEm
 import EditSalesEmployee from "./components/modules/sales/components/EditSalesEmployee";
 import { Toaster } from "react-hot-toast";
 
-let currentPath = window.location.pathname;
-
-const checkPath = (path: string) => {
-  if (currentPath === "/") {
-    return 30;
-  }
-  else {
-    return 85;
-  }
-}
 /* Global Suspense Wrapper */
 const withSuspense = (Component: React.ReactNode) => (
   <Suspense
@@ -121,7 +111,6 @@ function App() {
               path: "quotation",
               element: <QuotationPage />,
             },
-
             {
               path: "quotation/quotation-view/:id",
               element: <QuotationView />,
@@ -146,13 +135,10 @@ function App() {
               path: "production/production-edit/:id",
               element: <ProductionEdit />
             },
-
-
             {
               path: "reports",
               element: <ReportsAndAnalytics />,
             },
-
             {
               path: "employees",
               element: <SalesEmployees />,
