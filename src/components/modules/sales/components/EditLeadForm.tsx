@@ -218,7 +218,7 @@ const EditLeadForm: React.FC = () => {
                                         {item.label}
                                     </span>
                                 </div>
-                                {idx < 2 && <div className="h-[2px] flex-1 bg-slate-100 mx-4" />}
+                                {idx < 2 && <div className="h-0.5 flex-1 bg-slate-100 mx-4" />}
                             </React.Fragment>
                         ))}
                     </div>
@@ -279,7 +279,7 @@ const EditLeadForm: React.FC = () => {
                                     <p className="text-[10px] uppercase text-teal-200 font-black tracking-widest mb-1">Total Quantity</p>
                                     <p className="text-2xl font-black">{summary.totalQty} Units</p>
                                 </div>
-                                <div className="w-[1px] h-12 bg-white/10 hidden md:block" />
+                                <div className="w-px h-12 bg-white/10 hidden md:block" />
                                 <div>
                                     <p className="text-[10px] uppercase text-teal-200 font-black tracking-widest mb-1">Estimated Value</p>
                                     <p className="text-2xl font-black">₹ {summary.totalValue.toLocaleString('en-IN')}</p>

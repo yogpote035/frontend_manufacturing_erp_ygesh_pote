@@ -100,7 +100,7 @@ const ViewSalesEmployee: React.FC = () => {
           {/* LEFT PANEL: PROFILE SUMMARY */}
           <div className="lg:col-span-4 space-y-6">
             <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
-              <div className="h-32 bg-gradient-to-br from-[#005d52] to-[#004a41] relative">
+              <div className="h-32 bg-linear-to-br from-[#005d52] to-[#004a41] relative">
                  <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
                     <p className="text-[9px] font-black text-white uppercase tracking-widest">{employee.status}</p>
                  </div>
@@ -108,8 +108,8 @@ const ViewSalesEmployee: React.FC = () => {
 
               <div className="px-8 pb-10 text-center">
                 <div className="relative -mt-16 mb-6 inline-block">
-                  <div className="w-32 h-32 bg-white p-2 rounded-[2rem] shadow-2xl">
-                    <div className="w-full h-full rounded-[1.5rem] bg-[#d1e9e7] flex items-center justify-center text-3xl font-black text-[#005d52]">
+                  <div className="w-32 h-32 bg-white p-2 rounded-4xl shadow-2xl">
+                    <div className="w-full h-full rounded-3xl bg-[#d1e9e7] flex items-center justify-center text-3xl font-black text-[#005d52]">
                       SP
                     </div>
                   </div>
@@ -129,7 +129,7 @@ const ViewSalesEmployee: React.FC = () => {
               </div>
             </div>
 
-            <div className="bg-slate-900 rounded-[2rem] p-6 text-white shadow-xl flex items-center gap-5 border border-white/5">
+            <div className="bg-slate-900 rounded-4xl p-6 text-white shadow-xl flex items-center gap-5 border border-white/5">
               <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center text-teal-400 border border-white/10">
                 <Calendar size={24} />
               </div>
@@ -257,7 +257,7 @@ const InfoRow: React.FC<{ icon: React.ReactNode; label: string; text: string }> 
 );
 
 const MetricsCard: React.FC<MetricCardProps> = ({ label, value, icon, trend, isPositive }) => (
-  <div className="bg-white p-6 rounded-[2rem] border border-slate-100 flex justify-between items-center hover:border-teal-500/20 hover:shadow-xl hover:shadow-teal-900/5 transition-all group">
+  <div className="bg-white p-6 rounded-4xl border border-slate-100 flex justify-between items-center hover:border-teal-500/20 hover:shadow-xl hover:shadow-teal-900/5 transition-all group">
     <div>
       <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">{label}</p>
       <h3 className="text-2xl font-black text-slate-900 tracking-tight leading-none mb-2">{value}</h3>
