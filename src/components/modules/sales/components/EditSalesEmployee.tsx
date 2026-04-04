@@ -11,7 +11,7 @@ import {
   User,
   ShieldCheck,
   ChevronRight,
-  ArrowLeft,
+  
   FileText,
   ChevronDown
 } from "lucide-react";

@@ -6,7 +6,7 @@ import {
     FileText,
     Plus,
     ChevronDown,
-    ArrowLeft,
+    
     Trash2,
     Save,
     MapPin,

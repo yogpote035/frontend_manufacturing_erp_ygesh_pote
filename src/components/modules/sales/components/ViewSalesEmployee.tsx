@@ -10,7 +10,7 @@ import {
   MoreVertical,
   Activity,
   ChevronRight,
-  ArrowLeft,
+  
   ShieldCheck,
   Award,
   Target
