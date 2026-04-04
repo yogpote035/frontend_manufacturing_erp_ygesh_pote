@@ -10,9 +10,8 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { loginUser, clearErrors } from "../modules/sales/ModuleStateFiles/AuthSlice";
-import { useAppDispatch } from "../modules/sales/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../modules/sales/hooks/hooks";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -21,9 +20,8 @@ const Login: React.FC = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const navigate = useNavigate();
-
   const dispatch = useAppDispatch();
-  const { loading, error: authError } = useSelector((state: any) => state.auth);
+  const { loading, error: authError } = useAppSelector((state: any) => state.auth);
 
   useEffect(() => {
     dispatch(clearErrors());
@@ -45,7 +43,15 @@ const Login: React.FC = () => {
     const domainParts = domain.split(".");
     if (domainParts.length < 2) return { error: "Invalid domain format", isValid: false };
 
-    const validDomains = ["com", "org", "co", "in"];
+    const validDomains = [
+      "com", "org", "net", "edu", "gov", "mil",
+      "int", "info", "biz", "name",
+      "co", "io", "ai", "app", "dev", "tech",
+      "me", "tv", "xyz", "online", "store",
+      "blog", "site", "club", "shop",
+      "in", "us", "uk", "au", "ca", "de",
+      "fr", "jp", "cn", "ru", "br", "za", "live"
+    ];
     const extension = domainParts[domainParts.length - 1];
     if (!validDomains.includes(extension)) return { error: "Only .com, .org, .co, .in allowed", isValid: false };
 
