@@ -244,7 +244,7 @@ export const Dashboard = () => {
                 <BarChart data={currentData.pipeline} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
                   <CartesianGrid vertical={false} stroke="#f1f5f9" />
                   <XAxis dataKey="name" axisLine={false} tickLine={false} tick={isMobile ? false : { fill: '#7e899c', fontSize: 10, fontWeight: 500 }} />
-                  <YAxis axisLine={false} tickLine={false} tick={{ fill: '#7e899c', fontSize: 10, fontWeight:500 }} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fill: '#7e899c', fontSize: 10, fontWeight: 500 }} />
                   <Tooltip cursor={{ fill: '#f8fafc' }} contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }} />
                   <Bar
                     dataKey="value"
@@ -302,7 +302,7 @@ export const Dashboard = () => {
                 <BarChart data={currentData.products} margin={{ top: 10, right: 10, left: -25, bottom: 0 }} barGap={8}>
                   <CartesianGrid vertical={false} stroke="#f1f5f9" />
                   <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#7e899c', fontSize: 10, fontWeight: 500 }} />
-                  <YAxis axisLine={false} tickLine={false} tick={{ fill: '#7e899c', fontSize: 10 ,fontWeight: 500}} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fill: '#7e899c', fontSize: 10, fontWeight: 500 }} />
                   <Tooltip cursor={{ fill: 'transparent' }} />
                   <Bar dataKey="sold" fill="#005d52" radius={[6, 6, 0, 0]} barSize={28} />
                   <Bar dataKey="target" fill="#b0d9d9" radius={[6, 6, 0, 0]} barSize={28} />
