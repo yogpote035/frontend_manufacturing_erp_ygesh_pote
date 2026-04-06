@@ -19,6 +19,10 @@ import type { RootState } from "../../../../ApplicationState/Store";
 
 // --- Types updated to match API JSON ---
 type TimeTab = "Weekly" | "Monthly" | "Quarterly" | "Yearly" | "All Time" | "Custom";
+interface Product {
+    product_name: string;
+    quantity: number;
+}
 
 interface Lead {
     id: number;
@@ -32,6 +36,7 @@ interface Lead {
     priority: string;
     created_at: string;
     product_count: number;
+    products: Product[];
     assigned_to_name: string | null;
 }
 
@@ -237,8 +242,8 @@ const LeadList: React.FC = () => {
                                     <button
                                         onClick={() => setOpenDropdown(openDropdown === f.label ? null : f.label)}
                                         className={`w-full flex items-center justify-between gap-2 px-4 py-2.5 rounded-xl border text-[13px] font-bold ${f.value !== "All"
-                                                ? "bg-teal-50 border-[#005d52] text-[#005d52]"
-                                                : "bg-white border-gray-100 text-gray-500"
+                                            ? "bg-teal-50 border-[#005d52] text-[#005d52]"
+                                            : "bg-white border-gray-100 text-gray-500"
                                             }`}
                                     >
                                         <span className="truncate">{f.value === "All" ? f.label : f.value}</span>
@@ -328,7 +333,12 @@ const LeadList: React.FC = () => {
                                         </td>
 
                                         <td className="px-2 text-[13px] border-r border-gray-100 truncate max-w-[160px]">
-                                            {lead.contact_person}
+                                            {lead.products && lead.products.length > 0
+                                                ? lead.products.map((p, i) => (
+                                                    <div key={i}>{p.product_name}</div>
+                                                ))
+                                                : "-"
+                                            }
                                         </td>
 
                                         <td className="px-2 text-center border-r border-gray-100">
@@ -343,14 +353,17 @@ const LeadList: React.FC = () => {
 
                                         <td className="px-2">
                                             <div className="flex justify-center gap-1 flex-nowrap">
-                                                <button onClick={() => navigate("/sales/leads/view-lead/" + lead.id)} className="p-1.5">
-                                                    <Eye size={15} />
+                                                <button onClick={() => navigate("/sales/leads/view-lead/" + lead.id)}
+                                                    className="p-1.5 hover:bg-teal-50 text-gray-800 hover:text-[#005d52] rounded-md transition-all">
+                                                    <Eye size={14} />
                                                 </button>
-                                                <button onClick={() => navigate("/sales/leads/edit-lead/" + lead.id)} className="p-1.5">
-                                                    <FileEdit size={15} />
+                                                <button onClick={() => navigate("/sales/leads/edit-lead/" + lead.id)}
+                                                    className="p-1.5 hover:bg-teal-50 text-gray-800 hover:text-blue-600 rounded-md transition-all">
+                                                    <FileEdit size={14} />
                                                 </button>
-                                                <button className="p-1.5">
-                                                    <Trash2 size={15} />
+                                                <button className="p-1.5 hover:bg-teal-50 text-gray-800 hover:text-red-500 rounded-md transition-all"
+                                                >
+                                                    <Trash2 size={14} />
                                                 </button>
                                             </div>
                                         </td>
@@ -393,8 +406,8 @@ const LeadList: React.FC = () => {
                                         key={i}
                                         onClick={() => setCurrentPage(i + 1)}
                                         className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl text-xs font-bold ${currentPage === i + 1
-                                                ? "bg-[#005d52] text-white"
-                                                : "text-gray-400"
+                                            ? "bg-[#005d52] text-white"
+                                            : "text-gray-400"
                                             }`}
                                     >
                                         {i + 1}

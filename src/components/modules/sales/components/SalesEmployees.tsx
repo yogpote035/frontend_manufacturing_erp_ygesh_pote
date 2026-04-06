@@ -10,7 +10,6 @@ import {
   Eye,
   FileEdit,
   Trash2,
-  
   AlertCircle
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -21,6 +20,7 @@ import type { RootState } from "../../../../ApplicationState/Store";
 
 // --- Interfaces ---
 interface Employee {
+  id: string;
   user_id: string;
   name: string;
   designation: string;
@@ -198,17 +198,17 @@ const SalesEmployees: React.FC = () => {
 
                   <td className="px-6 py-8 flex items-center justify-between text-center relative overflow-visible">
                     <button
-                      onClick={() => navigate(`/sales/employees/view-employee/${emp.user_id}`)}
+                      onClick={() => navigate(`/sales/employees/view-employee/${emp?.id}`)}
                       className="p-1.5 hover:bg-teal-50 text-gray-800 hover:text-[#005d52] rounded-md transition-all">
                       <Eye size={14} />
                     </button>
                     <button
-                      onClick={() => navigate(`/sales/employees/edit-employee/${emp.user_id}`)}
+                      onClick={() => navigate(`/sales/employees/edit-employee/${emp?.id}`)}
                       className="p-1.5 hover:bg-teal-50 text-gray-800 hover:text-blue-600 rounded-md transition-all">
                       <FileEdit size={14} />
                     </button>
                     <button
-                      onClick={() => handleDelete(emp.user_id)}
+                      onClick={() => handleDelete(emp?.id)}
                       className="p-1.5 hover:bg-teal-50 text-gray-800 hover:text-red-500 rounded-md transition-all"
                     >
                       <Trash2 size={14} />
