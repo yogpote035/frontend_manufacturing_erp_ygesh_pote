@@ -10,7 +10,6 @@ import {
     X,
     MoreHorizontal,
     Settings,
-    Factory
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 // --- Redux Imports ---
@@ -166,14 +165,14 @@ const ProductionList: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#F8FAFC] p-4 md:p-10 font-sans text-slate-900">
+        <div className="min-h-screen bg-[#F8FAFC] p-4 sm:p-6 lg:p-8 font-sans text-slate-900">
             <div className="max-w-7xl mx-auto">
 
                 {/* Header */}
                 <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-10">
                     <div>
                         <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight flex items-center gap-3">
-                            Production Tracking <Factory className="text-[#005d52]" size={28} />
+                            Production
                         </h1>
                         <p className="text-slate-500 mt-1 font-medium">Real-time oversight of manufacturing floor stages.</p>
                     </div>

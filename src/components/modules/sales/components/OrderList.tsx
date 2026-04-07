@@ -138,14 +138,14 @@ const OrderList: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#F8FAFC] p-4 md:p-10 font-sans text-slate-900">
+        <div className="min-h-screen bg-[#F8FAFC] p-4 sm:p-6 lg:p-8 font-sans text-slate-900">
             <div className="max-w-7xl mx-auto">
 
                 {/* Header */}
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-6">
                     <div>
                         <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight flex items-center gap-3">
-                            Sales Orders
+                            Orders
                         </h1>
                         <p className="text-slate-500 mt-1 font-medium">Fulfillment tracking and order history management.</p>
                     </div>

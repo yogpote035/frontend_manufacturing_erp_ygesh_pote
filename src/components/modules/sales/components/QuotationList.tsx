@@ -152,7 +152,7 @@ const QuotationList: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#F8FAFC] p-4 md:p-10 font-sans text-slate-900">
+        <div className="min-h-screen bg-[#F8FAFC] p-4 sm:p-6 lg:p-8 font-sans text-slate-900">
             <div className="max-w-7xl mx-auto">
 
                 {/* Header */}
