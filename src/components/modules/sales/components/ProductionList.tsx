@@ -1,13 +1,13 @@
-import React, { useState, useMemo, useRef, useEffect  } from "react";
-import { 
-    Search, 
-    ChevronDown, 
-    Trash2, 
-    ChevronLeft, 
-    ChevronRight, 
-    Calendar as CalendarIcon, 
-    Edit3, 
-    X, 
+import React, { useState, useMemo, useRef, useEffect } from "react";
+import {
+    Search,
+    ChevronDown,
+    Trash2,
+    ChevronLeft,
+    ChevronRight,
+    Calendar as CalendarIcon,
+    Edit3,
+    X,
 } from "lucide-react";
 import {
     formatDateForInput,
@@ -53,7 +53,7 @@ const ProductionList: React.FC = () => {
         from: "",
         to: formatDateForInput(new Date()),
     });
-    
+
     const [statusFilter, setStatusFilter] = useState<ProdStatus>("All");
     const [isStatusOpen, setIsStatusOpen] = useState(false);
 
@@ -75,7 +75,7 @@ const ProductionList: React.FC = () => {
         return jobs.filter((j) => {
             const matchesSearch = Object.values(j).some((val) => String(val).toLowerCase().includes(searchQuery.toLowerCase()));
             const matchesStatus = statusFilter === "All" || j.status === statusFilter;
-            
+
             let matchesTime = true;
             if (activeTab === "Custom") {
                 matchesTime = isDateWithinCustomRange(j.updatedAt, customDateRange);
@@ -100,7 +100,7 @@ const ProductionList: React.FC = () => {
     };
 
     const getStatusColor = (st: string) => {
-        switch(st) {
+        switch (st) {
             case "In Progress": return "bg-blue-50 text-blue-600 border-blue-200";
             case "Completed": return "bg-green-50 text-green-600 border-green-200";
             case "Delayed": return "bg-red-50 text-red-600 border-red-200";
@@ -110,7 +110,7 @@ const ProductionList: React.FC = () => {
     }
 
     const getStageColor = (st: string) => {
-        switch(st) {
+        switch (st) {
             case "Raw Materials": return "text-purple-600 bg-purple-50 font-medium";
             case "Cutting": return "text-indigo-600 bg-indigo-50 font-medium";
             case "Assembly": return "text-teal-600 bg-teal-50 font-medium";
@@ -125,9 +125,10 @@ const ProductionList: React.FC = () => {
             <div className="max-w-7xl mx-auto">
                 {/* Header Section */}
                 <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-800 tracking-tight">Production Tracking</h1>
-                        <p className="text-sm text-gray-400 font-normal">Monitor live manufacturing stages</p>
+                        <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight">Production Tracking</h1>
+                        <p className="text-sm text-gray-500 mt-1 font-medium">Monitor live manufacturing stages.</p>
                     </div>
                 </header>
 
@@ -141,25 +142,26 @@ const ProductionList: React.FC = () => {
                                 className={`px-5 py-2 text-xs font-bold rounded-xl transition-all ${activeTab === tab ? "bg-[#d1e9e7] text-[#005d52] shadow-sm" : "text-gray-400 hover:text-gray-600"}`}
                             >
                                 {tab}
-                            </button> 
+                            </button>
                         ))}
                         <button
                             onClick={() => {
                                 setActiveTab("Custom");
-                                setIsCalendarOpen(!isCalendarOpen)}
+                                setIsCalendarOpen(!isCalendarOpen)
+                            }
 
                             }
-                                
+
                             className={`px-5 py-2 text-xs font-bold rounded-xl transition-all flex items-center gap-2 ${activeTab === "Custom" ? "bg-[#d1e9e7] text-[#005d52] shadow-sm" : "text-gray-400 hover:text-gray-600"}`}
                         >
-                            <CalendarIcon size={14} /> Custom 
+                            <CalendarIcon size={14} /> Custom
                         </button>
                     </div>
 
                     {/* Lead-Style Calendar Popup positioned below the button */}
                     {isCalendarOpen && (
-                        <div 
-                            ref={calendarRef} 
+                        <div
+                            ref={calendarRef}
                             className="absolute top-full mt-2 left-0 lg:left-80 z-50 bg-white p-6 rounded-3xl shadow-2xl border border-gray-100 min-w-[320px] animate-in zoom-in-95 duration-200"
                         >
                             <div className="flex justify-between items-center mb-4">
@@ -176,24 +178,24 @@ const ProductionList: React.FC = () => {
                                         className="w-full p-3 bg-gray-50 border-none rounded-xl text-sm outline-none focus:ring-2 focus:ring-teal-500/20"
                                     />
                                 </div>
-<div className="grid gap-1">
-    <label className="text-[10px] font-bold text-gray-400 uppercase">End Date</label>
-    <div className="relative">
-        <input
-            type="date"
-            onChange={(e) => {
-                const date = new Date(e.target.value);
-                const day = String(date.getDate()).padStart(2, "0");
-                const month = String(date.getMonth() + 1).padStart(2, "0");
-                const year = date.getFullYear();
-                
-                const formatted = `${day}-${month}-${year}`;
-                setCustomDateRange({ ...customDateRange, to: formatted });
-            }}
-            className="w-full p-3 bg-gray-50 border-none rounded-xl text-sm outline-none focus:ring-2 focus:ring-teal-500/20"
-        />
-    </div>
-</div>
+                                <div className="grid gap-1">
+                                    <label className="text-[10px] font-bold text-gray-400 uppercase">End Date</label>
+                                    <div className="relative">
+                                        <input
+                                            type="date"
+                                            onChange={(e) => {
+                                                const date = new Date(e.target.value);
+                                                const day = String(date.getDate()).padStart(2, "0");
+                                                const month = String(date.getMonth() + 1).padStart(2, "0");
+                                                const year = date.getFullYear();
+
+                                                const formatted = `${day}-${month}-${year}`;
+                                                setCustomDateRange({ ...customDateRange, to: formatted });
+                                            }}
+                                            className="w-full p-3 bg-gray-50 border-none rounded-xl text-sm outline-none focus:ring-2 focus:ring-teal-500/20"
+                                        />
+                                    </div>
+                                </div>
                                 <button
                                     onClick={() => { setActiveTab("Custom"); setIsCalendarOpen(false); setCurrentPage(1); }}
                                     className="w-full py-3 bg-[#005d52] text-white rounded-xl font-bold text-xs shadow-lg shadow-teal-900/20"
@@ -207,7 +209,7 @@ const ProductionList: React.FC = () => {
 
                 {/* Table Container */}
                 <div className="bg-white rounded-4xl shadow-xl shadow-gray-200/50 border border-gray-100 overflow-hidden">
-                    
+
                     {/* Toolbar */}
                     <div className="p-6 flex flex-col xl:flex-row justify-between items-center gap-4 bg-white border-b border-gray-50">
                         <div className="relative w-full xl:w-96 group">
@@ -216,7 +218,7 @@ const ProductionList: React.FC = () => {
                                 type="text"
                                 placeholder="Search by Job ID or Order Reference..."
                                 value={searchQuery}
-                                onChange={(e) => {setSearchQuery(e.target.value); setCurrentPage(1);}}
+                                onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
                                 className="w-full pl-12 pr-4 py-3 bg-[#f8faf9] border-transparent rounded-2xl focus:bg-white focus:ring-2 focus:ring-[#005d52]/10 text-sm outline-none transition-all"
                             />
                         </div>
@@ -243,9 +245,9 @@ const ProductionList: React.FC = () => {
                                     </div>
                                 )}
                             </div>
-                            <button 
-                                onClick={() => {setJobs(prev => prev.filter(j => !selectedIds.includes(j.id))); setSelectedIds([])}}
-                                disabled={selectedIds.length === 0} 
+                            <button
+                                onClick={() => { setJobs(prev => prev.filter(j => !selectedIds.includes(j.id))); setSelectedIds([]) }}
+                                disabled={selectedIds.length === 0}
                                 className="p-2.5 bg-red-50 text-red-500 rounded-xl disabled:opacity-40 hover:bg-red-100 transition-colors"
                             >
                                 <Trash2 size={18} />
@@ -356,7 +358,7 @@ const ProductionList: React.FC = () => {
                         </div>
                     </footer>
                 </div>
-            </div> 
+            </div>
         </div>
     );
 };

@@ -141,7 +141,7 @@ export const Dashboard = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
           <StatCard title="Total Leads" value={stats?.totalLeads} svg="/icons/users.svg" />
           <StatCard title="Deals Won" value={stats?.dealsWon} svg="/icons/win.svg" />
-          <StatCard title="Revenue" value={`₹${stats?.revenue}`} svg="/icons/rupee.svg" />
+          <StatCard title="Revenue" value={`₹${stats?.totalRevenue}`} svg="/icons/rupee.svg" />
           <StatCard title="Win Rate" value={`${stats?.winRate}%`} svg="/icons/trending.svg" />
         </div>
 

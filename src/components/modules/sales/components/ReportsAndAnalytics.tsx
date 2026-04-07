@@ -14,13 +14,7 @@ import {
   BarChart,
   Bar,
 } from "recharts";
-import {
-  Download,
-  Calendar,
-
-  X,
-  TrendingUp,
-} from "lucide-react";
+import { Download, Calendar, X, TrendingUp } from "lucide-react";
 
 // --- Types ---
 type TimeRange = "Weekly" | "Monthly" | "Quarterly" | "Yearly" | "Custom";
@@ -206,11 +200,12 @@ const ReportsAndAnalytics: FC = () => {
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-gray-800 tracking-tight">
+            <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight">
               Reports & Analytics
             </h1>
-            <p className="text-sm text-gray-400 mt-1 font-normal">
-              Advanced business intelligence insights
+            <p className="text-sm text-gray-500 mt-1 font-medium">
+              {" "}
+              Advanced business intelligence insights .
             </p>
           </div>
           <div className="flex gap-3 w-full sm:w-auto">
@@ -389,13 +384,13 @@ const ReportsAndAnalytics: FC = () => {
                   dataKey="name"
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: '#7e899c', fontSize: 10, fontWeight: 500 }}
+                  tick={{ fill: "#7e899c", fontSize: 10, fontWeight: 500 }}
                   dy={10}
                 />
                 <YAxis
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: '#7e899c', fontSize: 10, fontWeight: 500 }}
+                  tick={{ fill: "#7e899c", fontSize: 10, fontWeight: 500 }}
                 />
                 <Tooltip
                   cursor={{ fill: "#f8fafc" }}
@@ -452,13 +447,13 @@ const ReportsAndAnalytics: FC = () => {
                     dataKey="name"
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: '#7e899c', fontSize: 10, fontWeight: 500 }}
+                    tick={{ fill: "#7e899c", fontSize: 10, fontWeight: 500 }}
                     dy={10}
                   />
                   <YAxis
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: '#7e899c', fontSize: 10, fontWeight: 500 }}
+                    tick={{ fill: "#7e899c", fontSize: 10, fontWeight: 500 }}
                   />
                   <Tooltip
                     contentStyle={{
@@ -532,7 +527,7 @@ const ReportsAndAnalytics: FC = () => {
                             (a: number, b: any) => a + b.value,
                             0,
                           )) *
-                          100,
+                        100,
                       )}
                       %
                     </span>
@@ -553,7 +548,7 @@ const ReportsAndAnalytics: FC = () => {
               Sales Rep Ranking
             </span>
           </div>
-          
+
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>

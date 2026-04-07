@@ -7,15 +7,15 @@ const initialState = {
     // for sales pipeline chart
     pipeline: [],
     // recent leads
-    recentLeads:[],
+    recentLeads: [],
     // for product vs target chart
     salesByCategory: [],
     //new add here for dashboard stats
     stats: {
-        totalLeads: 0,
-        dealsWon: 0,
-        revenue: 0,
-        winRate: 0,
+        "totalLeads": "",
+        "dealsWon": "",
+        "totalRevenue": "",
+        "winRate": ""
     },
 
     loading: false,
@@ -47,6 +47,8 @@ const dashboardSlice = createSlice({
             state.salesByCategory = action.payload?.data?.salesByCategory || action.payload;
             state.pipeline = action.payload?.data?.pipeline || action.payload;
             state.recentLeads = action.payload?.data?.recentLeads || action.payload;
+            state.stats = action.payload?.data?.stats || action.payload;
+            state.error = "";
         },
     },
 });

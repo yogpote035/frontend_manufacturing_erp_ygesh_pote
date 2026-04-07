@@ -120,9 +120,10 @@ const QuotationList: React.FC = () => {
                 
                 {/* Header */}
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-                    <div>
-                        <h1 className="text-2xl font-bold text-gray-800 tracking-tight">Quotations</h1>
-                        <p className="text-sm text-gray-400 font-normal">Manage and track your sales quotes</p>
+                  
+                     <div>
+                        <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight">Quotations</h1>
+                        <p className="text-sm text-gray-500 mt-1 font-medium">Manage and track your sales quotes.</p>
                     </div>
                     <button
                         onClick={() => navigate(`/sales/quotation/quotation-create`)}

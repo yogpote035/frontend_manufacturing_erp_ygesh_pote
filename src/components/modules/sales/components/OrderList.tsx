@@ -46,7 +46,7 @@ const OrderList: React.FC = () => {
         from: "",
         to: formatDateForInput(new Date()),
     });
-    
+
     const [statusFilter, setStatusFilter] = useState<Status>("All");
     const [isStatusOpen, setIsStatusOpen] = useState(false);
 
@@ -66,10 +66,10 @@ const OrderList: React.FC = () => {
 
     const filteredOrders = useMemo(() => {
         return orders.filter((o) => {
-            const matchesSearch = o.customer.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                                 o.id.toLowerCase().includes(searchQuery.toLowerCase());
+            const matchesSearch = o.customer.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                o.id.toLowerCase().includes(searchQuery.toLowerCase());
             const matchesStatus = statusFilter === "All" || o.status === statusFilter;
-            
+
             let matchesTime = true;
             if (activeTab === "Custom") {
                 matchesTime = isDateWithinCustomRange(o.date, customDateRange);
@@ -90,7 +90,7 @@ const OrderList: React.FC = () => {
     };
 
     const getStatusColor = (st: string) => {
-        switch(st) {
+        switch (st) {
             case "Pending": return "bg-orange-50 text-orange-600 border-orange-200";
             case "Processing": return "bg-blue-50 text-blue-600 border-blue-200";
             case "Delivered": return "bg-green-50 text-green-600 border-green-200";
@@ -102,12 +102,12 @@ const OrderList: React.FC = () => {
     return (
         <div className="min-h-screen bg-[#f4f7f6] p-4 md:p-8 font-sans text-gray-900">
             <div className="max-w-7xl mx-auto">
-                
+
                 {/* Header */}
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-800 tracking-tight">Sales Orders</h1>
-                        <p className="text-sm text-gray-400 font-normal">Manage and actively track customer orders</p>
+                        <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight">Sales Orders</h1>
+                        <p className="text-sm text-gray-500 mt-1 font-medium">Manage and actively track customer orders.</p>
                     </div>
                     <button className="w-full md:w-auto flex items-center justify-center gap-2 bg-[#005d52] text-white px-6 py-3 rounded-2xl font-bold text-sm shadow-lg shadow-teal-900/20 hover:bg-[#005d52]/95 active:scale-95 transition-transform">
                         <Plus size={18} strokeWidth={3} /> Create Order
@@ -127,10 +127,11 @@ const OrderList: React.FC = () => {
                             </button>
                         ))}
                         <button
-                            onClick={() =>{
+                            onClick={() => {
 
-                            setActiveTab("Custom");
-                                setIsCalendarOpen(!isCalendarOpen)}}
+                                setActiveTab("Custom");
+                                setIsCalendarOpen(!isCalendarOpen)
+                            }}
                             className={`px-5 py-2 text-xs font-bold rounded-xl transition-all flex items-center gap-2 ${activeTab === "Custom" ? "bg-[#d1e9e7] text-[#005d52] shadow-sm" : "text-gray-400 hover:text-gray-600"}`}
                         >
                             <CalendarIcon size={14} /> Custom
@@ -154,24 +155,24 @@ const OrderList: React.FC = () => {
                                         className="w-full p-3 bg-gray-50 border-none rounded-xl text-sm outline-none focus:ring-2 focus:ring-teal-500/20"
                                     />
                                 </div>
-<div className="grid gap-1">
-    <label className="text-[10px] font-bold text-gray-400 uppercase">End Date</label>
-    <div className="relative">
-        <input
-            type="date"
-            onChange={(e) => {
-                const date = new Date(e.target.value);
-                const day = String(date.getDate()).padStart(2, "0");
-                const month = String(date.getMonth() + 1).padStart(2, "0");
-                const year = date.getFullYear();
-                
-                const formatted = `${day}-${month}-${year}`;
-                setCustomDateRange({ ...customDateRange, to: formatted });
-            }}
-            className="w-full p-3 bg-gray-50 border-none rounded-xl text-sm outline-none focus:ring-2 focus:ring-teal-500/20"
-        />
-    </div>
-</div>
+                                <div className="grid gap-1">
+                                    <label className="text-[10px] font-bold text-gray-400 uppercase">End Date</label>
+                                    <div className="relative">
+                                        <input
+                                            type="date"
+                                            onChange={(e) => {
+                                                const date = new Date(e.target.value);
+                                                const day = String(date.getDate()).padStart(2, "0");
+                                                const month = String(date.getMonth() + 1).padStart(2, "0");
+                                                const year = date.getFullYear();
+
+                                                const formatted = `${day}-${month}-${year}`;
+                                                setCustomDateRange({ ...customDateRange, to: formatted });
+                                            }}
+                                            className="w-full p-3 bg-gray-50 border-none rounded-xl text-sm outline-none focus:ring-2 focus:ring-teal-500/20"
+                                        />
+                                    </div>
+                                </div>
 
                                 <button
                                     onClick={() => { setActiveTab("Custom"); setIsCalendarOpen(false); setCurrentPage(1); }}
@@ -186,49 +187,49 @@ const OrderList: React.FC = () => {
 
                 {/* Table Container */}
                 <div className="bg-white rounded-4xl shadow-xl shadow-gray-200/50 border border-gray-100 overflow-hidden">
-                    
+
                     {/* Toolbar */}
-<div className="p-6 flex flex-col xl:flex-row justify-between items-center gap-4 border-b border-gray-50">
-    <div className="relative w-full xl:w-96 group">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-[#005d52] transition-colors" size={18} />
-        <input
-            type="text"
-            placeholder="Search orders..."
-            value={searchQuery}
-            onChange={(e) => {setSearchQuery(e.target.value); setCurrentPage(1);}}
-            className="w-full pl-12 pr-4 py-3 bg-[#f8faf9] border-transparent rounded-2xl focus:bg-white focus:ring-2 focus:ring-[#005d52]/10 text-sm outline-none transition-all"
-        />
-    </div>
+                    <div className="p-6 flex flex-col xl:flex-row justify-between items-center gap-4 border-b border-gray-50">
+                        <div className="relative w-full xl:w-96 group">
+                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-[#005d52] transition-colors" size={18} />
+                            <input
+                                type="text"
+                                placeholder="Search orders..."
+                                value={searchQuery}
+                                onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+                                className="w-full pl-12 pr-4 py-3 bg-[#f8faf9] border-transparent rounded-2xl focus:bg-white focus:ring-2 focus:ring-[#005d52]/10 text-sm outline-none transition-all"
+                            />
+                        </div>
 
-    <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto justify-end">
-        <div className="relative">
-            <button 
-                onClick={() => setIsStatusOpen(!isStatusOpen)}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-xs font-bold transition-all ${statusFilter !== "All" ? "bg-teal-50 border-[#005d52] text-[#005d52]" : "bg-white border-gray-100 text-gray-500 hover:border-gray-300"}`}
-            >
-                {statusFilter === "All" ? "Status" : statusFilter}
-                <ChevronDown size={14} className={isStatusOpen ? 'rotate-180 transition-transform' : 'transition-transform'} />
-            </button>
-            {isStatusOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-50 rounded-2xl shadow-2xl z-50 overflow-hidden py-1 animate-in zoom-in-95 duration-200">
-                    {(["All", "Pending", "Processing", "Delivered", "Cancelled"] as Status[]).map(s => (
-                        <button 
-                            key={s} 
-                            onClick={() => {setStatusFilter(s); setIsStatusOpen(false); setCurrentPage(1)}}
-                            className={`w-full text-left px-4 py-2.5 text-xs hover:bg-gray-50 transition-colors ${statusFilter === s ? "text-[#005d52] font-bold" : "text-gray-600"}`}
-                        >
-                            {s}
-                        </button>
-                    ))}
-                </div>
-            )}
-        </div>
+                        <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto justify-end">
+                            <div className="relative">
+                                <button
+                                    onClick={() => setIsStatusOpen(!isStatusOpen)}
+                                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-xs font-bold transition-all ${statusFilter !== "All" ? "bg-teal-50 border-[#005d52] text-[#005d52]" : "bg-white border-gray-100 text-gray-500 hover:border-gray-300"}`}
+                                >
+                                    {statusFilter === "All" ? "Status" : statusFilter}
+                                    <ChevronDown size={14} className={isStatusOpen ? 'rotate-180 transition-transform' : 'transition-transform'} />
+                                </button>
+                                {isStatusOpen && (
+                                    <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-50 rounded-2xl shadow-2xl z-50 overflow-hidden py-1 animate-in zoom-in-95 duration-200">
+                                        {(["All", "Pending", "Processing", "Delivered", "Cancelled"] as Status[]).map(s => (
+                                            <button
+                                                key={s}
+                                                onClick={() => { setStatusFilter(s); setIsStatusOpen(false); setCurrentPage(1) }}
+                                                className={`w-full text-left px-4 py-2.5 text-xs hover:bg-gray-50 transition-colors ${statusFilter === s ? "text-[#005d52] font-bold" : "text-gray-600"}`}
+                                            >
+                                                {s}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
 
-        <button onClick={() => {setOrders(prev => prev.filter(o => !selectedIds.includes(o.id))); setSelectedIds([])}} disabled={selectedIds.length === 0} className="p-2.5 bg-red-50 text-red-500 rounded-xl disabled:opacity-40 hover:bg-red-100 transition-colors">
-            <Trash2 size={18} />
-        </button>
-    </div>
-</div>
+                            <button onClick={() => { setOrders(prev => prev.filter(o => !selectedIds.includes(o.id))); setSelectedIds([]) }} disabled={selectedIds.length === 0} className="p-2.5 bg-red-50 text-red-500 rounded-xl disabled:opacity-40 hover:bg-red-100 transition-colors">
+                                <Trash2 size={18} />
+                            </button>
+                        </div>
+                    </div>
 
                     {/* Table with Vertical Lines */}
                     <div className="overflow-x-auto">
@@ -284,13 +285,13 @@ const OrderList: React.FC = () => {
                                         <td className="p-4">
                                             <div className="flex gap-0.5 justify-center">
                                                 <button title="View" onClick={() => navigate(`/sales/orders/order-view/${o.id}`)} className="p-1.5 hover:bg-teal-50 text-gray-400 hover:text-[#005d52] rounded-md transition-all">
-                                                    <Eye size={18}/>
+                                                    <Eye size={18} />
                                                 </button>
                                                 <button title="Download" className="p-1.5 hover:bg-blue-50 text-gray-400 hover:text-blue-600 rounded-md transition-all">
-                                                    <Download size={18}/>
+                                                    <Download size={18} />
                                                 </button>
                                                 <button title="Delete" className="p-1.5 hover:bg-red-50 text-gray-400 hover:text-red-500 rounded-md transition-all" onClick={() => setOrders(prev => prev.filter(x => x.id !== o.id))}>
-                                                    <Trash2 size={18}/>
+                                                    <Trash2 size={18} />
                                                 </button>
                                             </div>
                                         </td>
