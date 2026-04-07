@@ -303,12 +303,6 @@ const OpportunityList: React.FC = () => {
                     {/* --- Professional Pagination Footer --- */}
                     <footer className="p-6 bg-slate-50/50 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-6">
                         <div className="flex items-center gap-6">
-                            <div className="flex items-center gap-3">
-                                <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Rows</span>
-                                <select value={itemsPerPage} onChange={(e) => setItemsPerPage(Number(e.target.value))} className="bg-white border border-slate-200 text-sm font-bold text-[#005d52] py-1.5 px-3 rounded-xl outline-none shadow-sm">
-                                    {[10, 25, 50].map(val => <option key={val} value={val}>{val}</option>)}
-                                </select>
-                            </div>
                             <div className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">
                                 Showing <span className="text-slate-900">{paginatedData.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0}</span> to <span className="text-slate-900">{Math.min(currentPage * itemsPerPage, filteredOps.length)}</span> of <span className="text-slate-900">{filteredOps.length}</span> Opportunities
                             </div>
