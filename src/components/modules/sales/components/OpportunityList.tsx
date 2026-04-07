@@ -9,11 +9,11 @@ import {
     Eye,
     FileEdit,
     X,
-    Filter,
+    
     Calendar as CalendarIcon,
     MoreHorizontal,
     TrendingUp,
-    DollarSign,
+    
     IndianRupee
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -46,7 +46,7 @@ const OpportunityList: React.FC = () => {
     const dispatch = useAppDispatch();
 
     // Redux State
-    const { opportunities, loading, error } = useAppSelector((state: RootState) => state.SalesOpportunity);
+    const { opportunities } = useAppSelector((state: RootState) => state.SalesOpportunity);
 
     // Filter & Search States
     const [searchQuery, setSearchQuery] = useState("");
@@ -236,7 +236,7 @@ const OpportunityList: React.FC = () => {
                                 { label: 'Stage', value: stageFilter, options: ["All", "Discovery", "Proposal", "Negotiation", "Closed Won", "Closed Lost"], setter: setStageFilter },
                                 { label: 'Priority', value: priorityFilter, options: ["All", "High", "Medium", "Low","Critical"], setter: setPriorityFilter }
                             ].map((f) => (
-                                <div key={f.label} className="relative min-w-[150px]">
+                                <div key={f.label} className="relative min-w-37.5">
                                     <button
                                         onClick={() => setOpenDropdown(openDropdown === f.label ? null : f.label)}
                                         className={`w-full flex items-center justify-between gap-2 px-4 py-3 rounded-xl border text-[13px] font-bold ${f.value !== "All" ? "bg-teal-50 border-teal-200 text-[#005d52]" : "bg-white border-slate-200 text-slate-600"}`}
@@ -333,7 +333,7 @@ const OpportunityList: React.FC = () => {
                             <div className="flex items-center gap-1.5">
                                 {getPageNumbers().map((page, i) => (
                                     page === "..." ? <span key={i} className="px-2 text-slate-300"><MoreHorizontal size={14} /></span> : (
-                                        <button key={i} onClick={() => setCurrentPage(page as number)} className={`min-w-[40px] h-10 rounded-xl text-xs font-bold transition-all ${currentPage === page ? "bg-[#005d52] text-white shadow-lg shadow-teal-900/20 scale-105" : "bg-white text-slate-500 border border-slate-200"}`}>
+                                        <button key={i} onClick={() => setCurrentPage(page as number)} className={`min-w-10 h-10 rounded-xl text-xs font-bold transition-all ${currentPage === page ? "bg-[#005d52] text-white shadow-lg shadow-teal-900/20 scale-105" : "bg-white text-slate-500 border border-slate-200"}`}>
                                             {page}
                                         </button>
                                     )
